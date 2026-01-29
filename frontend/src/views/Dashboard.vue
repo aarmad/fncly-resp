@@ -2,40 +2,7 @@
   <div :class="{ 'dark': isDark }">
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-500 flex selection:bg-indigo-100 selection:text-indigo-700">
       <!-- Sidebar -->
-      <aside class="w-64 bg-indigo-700 dark:bg-slate-900 text-white min-h-screen hidden lg:block flex-shrink-0 transition-colors duration-500 shadow-xl z-20">
-        <div class="p-8">
-            <div class="flex items-center space-x-3 group cursor-default">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-700 font-black text-xl shadow-lg group-hover:rotate-12 transition-transform">F.</div>
-                <span class="text-2xl font-bold tracking-tight">Fncly.</span>
-            </div>
-        </div>
-
-        <nav class="mt-4 px-4 space-y-2">
-          <a href="#" class="flex items-center space-x-3 py-3 px-4 bg-white/10 rounded-xl transition-all duration-300 border border-white/5">
-            <svg class="w-5 h-5 text-indigo-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            <span class="font-medium">Tableau de bord</span>
-          </a>
-          <a href="#" class="flex items-center space-x-3 py-3 px-4 hover:bg-white/5 rounded-xl transition-all duration-300 text-indigo-100 group">
-            <svg class="w-5 h-5 text-indigo-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-            <span>Transactions</span>
-          </a>
-          <a href="#" class="flex items-center space-x-3 py-3 px-4 hover:bg-white/5 rounded-xl transition-all duration-300 text-indigo-100 group">
-             <svg class="w-5 h-5 text-indigo-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-             <span>Statistiques</span>
-          </a>
-        </nav>
-        
-        <div class="absolute bottom-10 w-64 p-8 space-y-4">
-          <button @click="toggleDark" class="flex items-center justify-between w-full py-2 px-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm font-medium">
-              <span>{{ isDark ? 'Mode Nuit' : 'Mode Jour' }}</span>
-              <span class="text-xl">{{ isDark ? '🌙' : '☀️' }}</span>
-          </button>
-          <button @click="logout" class="flex items-center space-x-3 text-indigo-200 hover:text-white transition-colors w-full px-4 group">
-              <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-              <span class="font-medium">Déconnexion</span>
-          </button>
-        </div>
-      </aside>
+      <Sidebar :is-dark="isDark" @toggle-dark="toggleDark" />
 
       <!-- Main Content -->
       <main class="flex-1 p-6 lg:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
@@ -45,7 +12,12 @@
              <h1 class="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">Vue d'ensemble</h1>
              <p class="text-slate-500 dark:text-slate-400 mt-1 font-medium italic">Ravi de vous revoir, <span class="text-indigo-600 dark:text-indigo-400 font-bold underline decoration-indigo-500/30 underline-offset-4">{{ auth.user?.name }}</span> 👋</p>
           </div>
-          <div class="flex items-center space-x-3 w-full md:w-auto animate-in fade-in duration-1000">
+          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto animate-in fade-in duration-1000">
+               <div class="hidden sm:flex items-center bg-white dark:bg-slate-800 p-1 px-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-x-2">
+                   <input v-model="startDate" type="date" class="bg-transparent border-none outline-none text-xs font-bold text-slate-600 dark:text-slate-300 py-2" />
+                   <span class="text-slate-300 px-1">→</span>
+                   <input v-model="endDate" type="date" class="bg-transparent border-none outline-none text-xs font-bold text-slate-600 dark:text-slate-300 py-2" />
+               </div>
                <button @click="exportPdf" 
                        :disabled="loadingExport"
                        class="flex-1 md:flex-none flex items-center justify-center space-x-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-500 text-slate-700 dark:text-slate-200 px-5 py-3 rounded-2xl shadow-sm transition-all active:scale-95 disabled:opacity-50">
@@ -202,6 +174,7 @@ import axios from 'axios'
 import { useAuthStore } from '../stores/auth'
 import { useRouter } from 'vue-router'
 import { Bar, Doughnut } from 'vue-chartjs'
+import Sidebar from '../components/Sidebar.vue'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
@@ -217,6 +190,9 @@ const saving = ref(false)
 const loadingExport = ref(false)
 const showModal = ref(false)
 const isDark = ref(localStorage.getItem('theme') === 'dark')
+
+const startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0])
+const endDate = ref(new Date().toISOString().split('T')[0])
 
 const form = ref({
     amount: '',
@@ -240,7 +216,12 @@ const fetchData = async () => {
     loading.value = true
     try {
         const [statsRes, categoriesRes] = await Promise.all([
-            axios.get('/dashboard/stats'),
+            axios.get('/dashboard/stats', {
+                params: {
+                    start_date: startDate.value,
+                    end_date: endDate.value
+                }
+            }),
             axios.get('/categories')
         ])
         stats.value = statsRes.data
@@ -252,6 +233,8 @@ const fetchData = async () => {
         loading.value = false
     }
 }
+
+watch([startDate, endDate], fetchData)
 
 onMounted(fetchData)
 
@@ -353,11 +336,17 @@ const logout = () => {
 const exportPdf = async () => {
     loadingExport.value = true
     try {
-        const response = await axios.get('/dashboard/export', { responseType: 'blob' })
+        const response = await axios.get('/dashboard/export', { 
+            responseType: 'blob',
+            params: {
+                start_date: startDate.value,
+                end_date: endDate.value
+            }
+        })
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        link.setAttribute('download', 'Rapport_Financier.pdf')
+        link.setAttribute('download', `Rapport_${startDate.value}_au_${endDate.value}.pdf`)
         document.body.appendChild(link)
         link.click()
     } catch (e) {
