@@ -1,5 +1,6 @@
 <template>
   <div :class="{ 'dark': isDark }">
+    <Loader :show="loading" />
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-500 flex selection:bg-indigo-100 selection:text-indigo-700">
       <!-- Sidebar -->
       <Sidebar :is-dark="isDark" @toggle-dark="toggleDark" />
@@ -77,6 +78,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { Bar, Doughnut } from 'vue-chartjs'
 import Sidebar from '../components/Sidebar.vue'
+import Loader from '../components/Loader.vue'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
@@ -84,6 +86,7 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 const router = useRouter()
 const stats = ref({ balance: 0, income: 0, expense: 0, by_category: [], monthly: [] })
 const loaded = ref(false)
+const loading = ref(false)
 const isDark = ref(localStorage.getItem('theme') === 'dark')
 
 const filters = ref({
@@ -99,12 +102,15 @@ const toggleDark = () => {
 }
 
 const fetchData = async () => {
+    loading.value = true
     try {
         const response = await axios.get('/dashboard/stats', { params: filters.value })
         stats.value = response.data
         loaded.value = true
     } catch (e) {
         console.error(e)
+    } finally {
+        loading.value = false
     }
 }
 

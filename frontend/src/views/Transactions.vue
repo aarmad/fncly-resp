@@ -1,5 +1,6 @@
 <template>
   <div :class="{ 'dark': isDark }">
+    <Loader :show="loading" />
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-500 flex selection:bg-indigo-100 selection:text-indigo-700">
       <!-- Sidebar -->
       <Sidebar :is-dark="isDark" @toggle-dark="toggleDark" />
@@ -193,6 +194,7 @@ import axios from 'axios'
 import { useAuthStore } from '../stores/auth'
 import { useRouter } from 'vue-router'
 import Sidebar from '../components/Sidebar.vue'
+import Loader from '../components/Loader.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
