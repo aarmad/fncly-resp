@@ -12,12 +12,25 @@ class TransactionController extends Controller
     {
         $query = $request->user()->transactions()->with('category');
 
-        if ($request->has('month')) {
+        if ($request->filled('start_date')) {
+            $query->where('date', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->where('date', '<=', $request->end_date);
+        }
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('month') && !$request->filled('start_date')) {
             $query->whereMonth('date', date('m', strtotime($request->month)))
                 ->whereYear('date', date('Y', strtotime($request->month)));
         }
 
-        return $query->latest('date')->paginate(10);
+        return $query->latest('date')->paginate(15);
     }
 
     public function store(Request $request)

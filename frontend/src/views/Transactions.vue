@@ -12,12 +12,28 @@
              <p class="text-slate-500 dark:text-slate-400 mt-1 font-medium italic">Historique détaillé de vos opérations</p>
           </div>
           <div class="flex items-center space-x-3 w-full md:w-auto animate-in fade-in duration-1000">
-               <button @click="showModal = true" class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl shadow-lg shadow-indigo-600/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2 font-bold">
+               <button @click="openAddModal" class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl shadow-lg shadow-indigo-600/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2 font-bold">
                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                    <span>Nouvelle Transaction</span>
                </button>
           </div>
         </header>
+
+        <!-- Summary Stats Section -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-xl border border-slate-100 dark:border-slate-700 animate-in zoom-in duration-500">
+                <p class="text-slate-400 font-bold uppercase text-xs mb-2">Total Revenus</p>
+                <p class="text-3xl font-black text-emerald-600">{{ formatCurrency(stats.income) }}</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-xl border border-slate-100 dark:border-slate-700 animate-in zoom-in duration-500 delay-75">
+                <p class="text-slate-400 font-bold uppercase text-xs mb-2">Total Dépenses</p>
+                <p class="text-3xl font-black text-rose-600">{{ formatCurrency(stats.expense) }}</p>
+            </div>
+            <div class="bg-indigo-600 p-8 rounded-[2rem] shadow-xl text-white animate-in zoom-in duration-500 delay-150">
+                <p class="text-indigo-100 font-bold uppercase text-xs mb-2">SOLDE PÉRIODE</p>
+                <p class="text-3xl font-black">{{ formatCurrency(stats.balance) }}</p>
+            </div>
+        </section>
 
         <!-- Filters Section -->
         <section class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 mb-10">
@@ -85,7 +101,10 @@
                                     {{ t.type === 'income' ? '+' : '-' }}{{ formatCurrency(t.amount) }}
                                 </span>
                             </td>
-                            <td class="px-8 py-5 text-center">
+                            <td class="px-8 py-5 text-center flex items-center justify-center space-x-2">
+                                <button @click="editTransaction(t)" class="p-2 text-slate-300 hover:text-indigo-500 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                </button>
                                 <button @click="deleteTransaction(t.id)" class="p-2 text-slate-300 hover:text-red-500 transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
@@ -130,7 +149,7 @@
                     </div>
                     
                     <div class="mb-8">
-                        <h3 class="text-3xl font-black text-slate-800 dark:text-white tracking-tight">Nouvelle opération</h3>
+                        <h3 class="text-3xl font-black text-slate-800 dark:text-white tracking-tight">{{ isEditing ? 'Modifier' : 'Nouvelle' }} opération</h3>
                     </div>
 
                     <form @submit.prevent="saveTransaction" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -179,16 +198,19 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const transactions = ref([])
+const stats = ref({ income: 0, expense: 0, balance: 0 })
 const pagination = ref({ current_page: 1, last_page: 1 })
 const loading = ref(false)
 const saving = ref(false)
 const showModal = ref(false)
+const isEditing = ref(false)
+const currentId = ref(null)
 const isDark = ref(localStorage.getItem('theme') === 'dark')
 
 const categories = ref([])
 const filters = ref({
-    start_date: '',
-    end_date: '',
+    start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
+    end_date: new Date().toISOString().split('T')[0],
     type: '',
     category_id: ''
 })
@@ -212,7 +234,7 @@ const toggleDark = () => {
 const fetchData = async (page = 1) => {
     loading.value = true
     try {
-        const [transRes, catsRes] = await Promise.all([
+        const [transRes, catsRes, statsRes] = await Promise.all([
             axios.get('/transactions', {
                 params: {
                     page,
@@ -222,7 +244,15 @@ const fetchData = async (page = 1) => {
                     category_id: filters.value.category_id
                 }
             }),
-            axios.get('/categories')
+            axios.get('/categories'),
+            axios.get('/dashboard/stats', {
+                params: {
+                    start_date: filters.value.start_date,
+                    end_date: filters.value.end_date,
+                    type: filters.value.type,
+                    category_id: filters.value.category_id
+                }
+            })
         ])
         transactions.value = transRes.data.data
         pagination.value = {
@@ -230,6 +260,7 @@ const fetchData = async (page = 1) => {
             last_page: transRes.data.last_page
         }
         categories.value = catsRes.data
+        stats.value = statsRes.data
     } catch (e) {
         console.error(e)
     } finally {
@@ -248,18 +279,46 @@ const resetFilters = () => {
     fetchData(1)
 }
 
+const openAddModal = () => {
+    resetForm()
+    showModal.value = true
+}
+
+const editTransaction = (t) => {
+    isEditing.value = true
+    currentId.value = t.id
+    form.value = {
+        amount: t.amount,
+        type: t.type,
+        category_id: t.category_id || '',
+        date: t.date,
+        note: t.note || ''
+    }
+    showModal.value = true
+}
+
 const saveTransaction = async () => {
     saving.value = true
     try {
-        await axios.post('/transactions', form.value)
+        if (isEditing.value) {
+            await axios.put(`/transactions/${currentId.value}`, form.value)
+        } else {
+            await axios.post('/transactions', form.value)
+        }
         showModal.value = false
-        form.value = { amount: '', type: 'expense', category_id: '', date: new Date().toISOString().split('T')[0], note: '' }
-        fetchData(1)
+        resetForm()
+        fetchData(pagination.value.current_page)
     } catch (e) {
         alert('Erreur lors de l\'enregistrement')
     } finally {
         saving.value = false
     }
+}
+
+const resetForm = () => {
+    isEditing.value = false
+    currentId.value = null
+    form.value = { amount: '', type: 'expense', category_id: '', date: new Date().toISOString().split('T')[0], note: '' }
 }
 
 const deleteTransaction = async (id) => {

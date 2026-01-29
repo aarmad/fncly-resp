@@ -37,8 +37,11 @@
 
 <body>
     <div class="header">
-        <h1>Monthly Report</h1>
+        <h1>Financial Report</h1>
         <p>Generated for {{ $user->name }}</p>
+        @if($startDate || $endDate)
+            <p>Period: {{ $startDate ?? 'Beginning' }} to {{ $endDate ?? 'Today' }}</p>
+        @endif
     </div>
 
     <div class="section">
