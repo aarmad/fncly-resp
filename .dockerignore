@@ -1,0 +1,5 @@
+frontend/
+.git/
+backend/vendor/
+backend/node_modules/
+backend/.env
