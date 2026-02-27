@@ -2,10 +2,6 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.DATABASE_URL || '';
 
-if (!MONGODB_URI) {
-    throw new Error('Please define the DATABASE_URL environment variable inside .env');
-}
-
 let cached = (global as any).mongoose;
 
 if (!cached) {
@@ -15,6 +11,10 @@ if (!cached) {
 async function dbConnect() {
     if (cached.conn) {
         return cached.conn;
+    }
+
+    if (!MONGODB_URI) {
+        throw new Error('Please define the DATABASE_URL environment variable inside .env');
     }
 
     if (!cached.promise) {
