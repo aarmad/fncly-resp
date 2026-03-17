@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import dbConnect from "@/lib/mongodb";
-import { Transaction } from "@/models";
+import { Transaction, Goal, Contact, Notification } from "@/models";
 import mongoose from "mongoose";
 
 export async function GET(req: any) {
@@ -58,11 +58,29 @@ export async function GET(req: any) {
         { $unwind: "$category" }
     ]);
 
+    // Latest Invoice (Most recent expense)
+    const latestInvoice = await Transaction.findOne({ userId: session.user.id, type: 'expense' })
+        .sort({ date: -1 })
+        .populate('categoryId', 'name');
+
+    // Goals (Savings Projects)
+    const goals = await mongoose.models.Goal.find({ userId: session.user.id }).sort({ createdAt: -1 });
+
+    // Contacts (Quick Transfer)
+    const contacts = await mongoose.models.Contact.find({ userId: session.user.id }).sort({ createdAt: -1 });
+
+    // Notifications
+    const notifications = await mongoose.models.Notification.find({ userId: session.user.id }).sort({ date: -1 }).limit(10);
+
     return NextResponse.json({
         balance,
         income,
         expense,
         monthly: monthlyData.reverse().map(m => ({ month: m._id, income: m.income, expense: m.expense })),
-        by_category: expensesByCategory.map(c => ({ name: c.category.name, value: c.total }))
+        by_category: expensesByCategory.map(c => ({ name: c.category.name, value: c.total })),
+        latestInvoice,
+        goals,
+        contacts,
+        notifications
     });
 }

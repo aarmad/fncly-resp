@@ -54,5 +54,15 @@ export async function POST(req: Request) {
         userId: session.user.id
     });
 
+    // Auto-generate a notification for large transactions
+    if (transaction.type === 'expense' && transaction.amount >= 100) {
+        await mongoose.models.Notification.create({
+            title: 'High Value Expense Flagged',
+            message: `An expense of ${transaction.amount}€ has been logged (ID: ${transaction._id.toString().substring(0, 6).toUpperCase()})`,
+            type: 'alert',
+            userId: session.user.id
+        });
+    }
+
     return NextResponse.json(transaction, { status: 201 });
 }

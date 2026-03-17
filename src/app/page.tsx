@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import TransactionModal from "@/components/TransactionModal";
+import GoalModal from "@/components/GoalModal";
+import ContactModal from "@/components/ContactModal";
 import Loader from "@/components/Loader";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -21,10 +23,12 @@ import { Bell, ArrowUpRight, TrendingUp, Globe, Plus, ChevronRight } from "lucid
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
-  const [stats, setStats] = useState({ balance: 0, income: 0, expense: 0, monthly: [], by_category: [] });
+  const [stats, setStats] = useState<any>({ balance: 0, income: 0, expense: 0, monthly: [], by_category: [], goals: [], contacts: [], notifications: [], latestInvoice: null });
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -147,33 +151,29 @@ export default function Dashboard() {
                 <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333]">
                     <div className="flex justify-between items-center mb-6">
                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888]">Savings Projects</span>
-                        <button className="text-[10px] font-black uppercase tracking-widest text-[#f5f5f5] bg-[#222] hover:bg-[#333] px-3 py-1 rounded-full transition-colors">Add</button>
+                        <button onClick={() => setIsGoalModalOpen(true)} className="text-[10px] font-black uppercase tracking-widest text-[#f5f5f5] bg-[#222] hover:bg-[#333] px-3 py-1 rounded-full transition-colors">Add</button>
                     </div>
-                    <div className="space-y-4">
-                        {/* Goal 1 */}
-                        <div className="bg-[#111] border border-[#333] p-4 rounded-xl flex items-center justify-between group cursor-pointer hover:border-[#666] transition-colors">
-                            <div className="w-full">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="font-bold text-sm text-[#f5f5f5] tracking-wide">Emergency Fund</span>
-                                    <span className="text-[#888] text-xs font-black">75%</span>
+                    <div className="space-y-4 max-h-[160px] overflow-y-auto scrollbar-hide">
+                        {stats.goals && stats.goals.length > 0 ? stats.goals.map((goal: any) => {
+                            const percent = goal.targetAmount > 0 ? Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) : 0;
+                            return (
+                                <div key={goal._id} className="bg-[#111] border border-[#333] p-4 rounded-xl flex items-center justify-between group cursor-pointer hover:border-[#666] transition-colors">
+                                    <div className="w-full">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-bold text-sm text-[#f5f5f5] tracking-wide">{goal.name}</span>
+                                            <span className="text-[#888] text-xs font-black">{percent}%</span>
+                                        </div>
+                                        <div className="w-full bg-[#222] h-1.5 rounded-full overflow-hidden">
+                                            <div className="bg-[#f5f5f5] h-full" style={{ width: `${percent}%` }}></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="w-full bg-[#222] h-1.5 rounded-full overflow-hidden">
-                                    <div className="bg-[#f5f5f5] w-[75%] h-full"></div>
-                                </div>
+                            );
+                        }) : (
+                            <div className="text-center py-4">
+                                <span className="text-[#666] text-[10px] font-black uppercase tracking-widest">No Projects Defined</span>
                             </div>
-                        </div>
-                        {/* Goal 2 */}
-                        <div className="bg-[#111] border border-[#333] p-4 rounded-xl flex items-center justify-between group cursor-pointer hover:border-[#666] transition-colors">
-                            <div className="w-full">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="font-bold text-sm text-[#888] tracking-wide">New Laptop</span>
-                                    <span className="text-[#888] text-xs font-black">40%</span>
-                                </div>
-                                <div className="w-full bg-[#222] h-1.5 rounded-full overflow-hidden">
-                                    <div className="bg-[#666] w-[40%] h-full"></div>
-                                </div>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
 
@@ -203,60 +203,78 @@ export default function Dashboard() {
                <div className="flex items-center gap-2 mb-6">
                   <Bell className="w-4 h-4 text-[#888]" />
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f5f5f5]">Notifications</span>
-                  <span className="ml-auto bg-[#333] text-[9px] px-2 py-0.5 rounded-full text-[#888] font-black">2 NEW</span>
+                  <span className="ml-auto bg-[#333] text-[9px] px-2 py-0.5 rounded-full text-[#888] font-black">
+                     {stats.notifications ? stats.notifications.length : 0} NEW
+                  </span>
                </div>
                <div className="space-y-3">
-                  <div className="bg-[#222] p-4 rounded-xl border border-[#444] cursor-pointer hover:bg-[#333] transition-colors">
-                     <span className="text-[9px] font-black uppercase tracking-widest text-[#888] block mb-1">Reminder | Upcoming Bill</span>
-                     <p className="text-sm font-bold tracking-wide text-[#f5f5f5]">Server Hosting - 15.99€</p>
-                     <span className="text-[10px] font-bold text-[#666] mt-2 block tracking-widest">Tomorrow, 08:00 AM</span>
-                  </div>
-                  <div className="bg-[#111] p-4 rounded-xl border border-[#333] opacity-60">
-                     <span className="text-[9px] font-black uppercase tracking-widest text-[#888] block mb-1">Alert | Threshold Reached</span>
-                     <p className="text-sm font-bold tracking-wide text-[#888]">Budget 'Dining' exceeded by 10%</p>
-                  </div>
+                  {stats.notifications && stats.notifications.length > 0 ? stats.notifications.slice(0, 3).map((notif: any) => (
+                      <div key={notif._id} className="bg-[#222] p-4 rounded-xl border border-[#444] cursor-pointer hover:bg-[#333] transition-colors">
+                         <span className="text-[9px] font-black uppercase tracking-widest text-[#888] block mb-1">{notif.type} | {notif.title}</span>
+                         <p className="text-sm font-bold tracking-wide text-[#f5f5f5]">{notif.message}</p>
+                         <span className="text-[10px] font-bold text-[#666] mt-2 block tracking-widest">{new Date(notif.date).toLocaleDateString()}</span>
+                      </div>
+                  )) : (
+                      <div className="bg-[#111] p-4 rounded-xl border border-[#333] opacity-60">
+                         <span className="text-[9px] font-black uppercase tracking-widest text-[#888] block mb-1">System Action</span>
+                         <p className="text-sm font-bold tracking-wide text-[#888]">No notifications present.</p>
+                      </div>
+                  )}
                </div>
              </div>
 
              {/* Receipt / Invoice Breakdown */}
              <div className="bg-[#f5f5f5] text-black p-8 rounded-[2rem] border border-[#ccc]">
-                <div className="flex justify-between items-start mb-6 border-b border-[#ddd] pb-4">
-                   <div>
-                      <h4 className="font-black uppercase tracking-tighter text-3xl leading-none">LATEST <br/> INVOICE</h4>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-[#888] mt-2">[ ID: #001845 ]</p>
-                   </div>
-                </div>
-                <div className="space-y-3 text-[10px] font-black uppercase tracking-[0.15em]">
-                   <div className="flex justify-between">
-                      <span className="text-[#666]">Sub Total:</span>
-                      <span>145.00€</span>
-                   </div>
-                   <div className="flex justify-between">
-                      <span className="text-[#666]">Tax (20%):</span>
-                      <span>29.00€</span>
-                   </div>
-                   <div className="flex justify-between text-[#888]">
-                      <span>Discount (PROMO):</span>
-                      <span>- 0.00€</span>
-                   </div>
-                   <div className="flex justify-between border-t border-[#ddd] pt-4 mt-2">
-                      <span className="text-[#000] text-xs">Total Due:</span>
-                      <span className="text-xl tracking-tighter text-[#000]">174.00€</span>
-                   </div>
-                </div>
+                {stats.latestInvoice ? (
+                    <>
+                        <div className="flex justify-between items-start mb-6 border-b border-[#ddd] pb-4">
+                           <div>
+                              <h4 className="font-black uppercase tracking-tighter text-3xl leading-none">LATEST <br/> EXPENSE</h4>
+                              <p className="text-[9px] font-black uppercase tracking-widest text-[#888] mt-2">
+                                [ ID: {stats.latestInvoice._id ? stats.latestInvoice._id.slice(-6).toUpperCase() : 'N/A'} ]
+                              </p>
+                           </div>
+                        </div>
+                        <div className="space-y-3 text-[10px] font-black uppercase tracking-[0.15em]">
+                           <div className="flex justify-between">
+                              <span className="text-[#666]">Category:</span>
+                              <span className="truncate max-w-[120px]">{stats.latestInvoice.categoryId?.name || 'Uncategorized'}</span>
+                           </div>
+                           <div className="flex justify-between">
+                              <span className="text-[#666]">Note:</span>
+                              <span className="truncate max-w-[120px]">{stats.latestInvoice.note || '-'}</span>
+                           </div>
+                           <div className="flex justify-between text-[#888]">
+                              <span>Date:</span>
+                              <span>{new Date(stats.latestInvoice.date).toLocaleDateString()}</span>
+                           </div>
+                           <div className="flex justify-between border-t border-[#ddd] pt-4 mt-2">
+                              <span className="text-[#000] text-xs">Total Due:</span>
+                              <span className="text-xl tracking-tighter text-[#000]">{formatCurrency(stats.latestInvoice.amount)}</span>
+                           </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="text-center py-10 opacity-50">
+                        <span className="text-[10px] font-black uppercase tracking-widest">No Expenses Logged</span>
+                    </div>
+                )}
              </div>
 
              {/* Contacts / Quick Send */}
              <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333]">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888] block mb-6">Quick Transfer</span>
                 <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide">
-                   {['A', 'J', 'M', 'S', '+'].map((initial, i) => (
-                      <button key={i} className={`flex-shrink-0 w-12 h-12 rounded-full border border-[#333] font-black text-sm flex items-center justify-center transition-all ${initial === '+' ? 'bg-[#f5f5f5] text-black hover:bg-[#ccc]' : 'bg-[#111] text-[#888] hover:bg-[#f5f5f5] hover:text-black hover:border-transparent'}`}>
-                         {initial === '+' ? <Plus className="w-4 h-4" /> : initial}
+                   {stats.contacts && stats.contacts.map((contact: any) => (
+                      <button key={contact._id} title={contact.name} className="flex-shrink-0 w-12 h-12 rounded-full border border-[#333] font-black text-sm flex items-center justify-center transition-all bg-[#111] text-[#888] hover:bg-[#f5f5f5] hover:text-black hover:border-transparent">
+                         {contact.initials || "?"}
                       </button>
                    ))}
+                   <button onClick={() => setIsContactModalOpen(true)} className="flex-shrink-0 w-12 h-12 rounded-full border border-[#333] font-black text-sm flex items-center justify-center transition-all bg-[#f5f5f5] text-black hover:bg-[#ccc]">
+                      <Plus className="w-4 h-4" />
+                   </button>
                 </div>
-                <button className="w-full mt-2 bg-[#111] hover:bg-[#222] transition-colors border border-[#333] rounded-xl p-4 flex justify-between items-center group">
+                <button onClick={() => setIsModalOpen(true)} className="w-full mt-2 bg-[#111] hover:bg-[#222] transition-colors border border-[#333] rounded-xl p-4 flex justify-between items-center group">
                    <span className="text-[#888] group-hover:text-[#f5f5f5] text-[10px] font-black tracking-widest uppercase transition-colors">Select Contact</span>
                    <ChevronRight className="w-4 h-4 text-[#666] group-hover:text-[#f5f5f5] transition-colors" />
                 </button>
@@ -268,6 +286,16 @@ export default function Dashboard() {
         <TransactionModal 
           isOpen={isModalOpen} 
           onClose={() => setIsModalOpen(false)} 
+          onSuccess={fetchStats} 
+        />
+        <GoalModal 
+          isOpen={isGoalModalOpen} 
+          onClose={() => setIsGoalModalOpen(false)} 
+          onSuccess={fetchStats} 
+        />
+        <ContactModal 
+          isOpen={isContactModalOpen} 
+          onClose={() => setIsContactModalOpen(false)} 
           onSuccess={fetchStats} 
         />
       </main>
