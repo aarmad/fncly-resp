@@ -7,13 +7,9 @@ import Loader from "@/components/Loader";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import {
-    Plus,
-    ChevronLeft,
-    ChevronRight,
-} from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 export default function TransactionsPage() {
     const { data: session, status } = useSession();
@@ -59,70 +55,72 @@ export default function TransactionsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex transition-colors duration-500">
+        <div className="min-h-screen bg-black flex font-sans text-[#f5f5f5]">
             <Sidebar />
             <Loader show={loading} />
 
             <main className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full">
-                <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+                <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 uppercase">
                     <div>
-                        <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">Transactions</h1>
-                        <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium italic">Historique détaillé de vos opérations</p>
+                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">RECORDS</h1>
+                        <p className="text-[#888] font-bold mt-2 tracking-widest text-xs flex gap-4 uppercase">
+                            <span>Detailed Transaction Ledger</span>
+                        </p>
                     </div>
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl shadow-lg shadow-indigo-600/20 transition-all font-bold flex items-center gap-2"
+                        className="bg-[#222] hover:bg-[#333] text-[#f5f5f5] px-6 py-3 rounded-full transition-all font-bold tracking-widest text-xs flex items-center gap-2 uppercase"
                     >
-                        <Plus className="w-5 h-5" />
-                        Nouvelle Transaction
+                        <Plus className="w-4 h-4" />
+                        New Entry
                     </button>
                 </header>
 
                 {/* Quick Stats */}
-                <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
-                        <p className="text-slate-400 font-bold uppercase text-[10px] mb-1">Revenus</p>
-                        <p className="text-xl font-black text-emerald-600">{formatCurrency(stats.income)}</p>
+                <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div className="bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333] min-h-[160px] flex flex-col justify-between">
+                        <p className="text-[#888] font-black uppercase text-[10px] tracking-widest mb-1">Total Income</p>
+                        <p className="text-3xl font-black text-[#f5f5f5]">{formatCurrency(stats.income)}</p>
                     </div>
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
-                        <p className="text-slate-400 font-bold uppercase text-[10px] mb-1">Dépenses</p>
-                        <p className="text-xl font-black text-rose-600">{formatCurrency(stats.expense)}</p>
+                    <div className="bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333] min-h-[160px] flex flex-col justify-between">
+                        <p className="text-[#888] font-black uppercase text-[10px] tracking-widest mb-1">Total Expenses</p>
+                        <p className="text-3xl font-black text-[#f5f5f5]">{formatCurrency(stats.expense)}</p>
                     </div>
-                    <div className="bg-indigo-600 p-6 rounded-3xl shadow-sm text-white">
-                        <p className="text-indigo-100 font-bold uppercase text-[10px] mb-1">Solde</p>
-                        <p className="text-xl font-black">{formatCurrency(stats.balance)}</p>
+                    <div className="bg-[#f5f5f5] text-black p-8 rounded-[2rem] min-h-[160px] flex flex-col justify-between">
+                        <p className="font-black uppercase text-[10px] tracking-widest opacity-50 mb-1">Net Balance</p>
+                        <p className="text-3xl font-black">{formatCurrency(stats.balance)}</p>
                     </div>
                 </section>
 
                 {/* Filters */}
-                <section className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 mb-8">
+                <section className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333] mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Type</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Type</label>
                             <select
-                                className="w-full bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border-none outline-none font-bold text-sm dark:text-white"
+                                className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-xs text-[#f5f5f5] uppercase transition-colors"
                                 value={filters.type}
                                 onChange={(e) => setFilters({ ...filters, type: e.target.value })}
                             >
-                                <option value="">Tous les types</option>
-                                <option value="income">Revenus</option>
-                                <option value="expense">Dépenses</option>
+                                <option value="">All Types</option>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
                             </select>
                         </div>
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Début</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Start Date</label>
                             <input
                                 type="date"
-                                className="w-full bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border-none outline-none font-bold text-sm dark:text-white"
+                                className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-xs text-[#f5f5f5] uppercase transition-colors"
                                 value={filters.start_date}
                                 onChange={(e) => setFilters({ ...filters, start_date: e.target.value })}
                             />
                         </div>
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Fin</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">End Date</label>
                             <input
                                 type="date"
-                                className="w-full bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border-none outline-none font-bold text-sm dark:text-white"
+                                className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-xs text-[#f5f5f5] uppercase transition-colors"
                                 value={filters.end_date}
                                 onChange={(e) => setFilters({ ...filters, end_date: e.target.value })}
                             />
@@ -130,42 +128,44 @@ export default function TransactionsPage() {
                         <div className="flex items-end">
                             <button
                                 onClick={() => setFilters({ start_date: "", end_date: "", type: "", category_id: "" })}
-                                className="w-full p-3 text-slate-400 hover:text-indigo-600 font-bold text-sm transition-colors"
+                                className="w-full p-4 hover:bg-[#222] text-[#888] hover:text-[#f5f5f5] font-black text-xs uppercase tracking-widest rounded-2xl transition-colors border border-transparent hover:border-[#333]"
                             >
-                                Réinitialiser
+                                Reset Filters
                             </button>
                         </div>
                     </div>
                 </section>
 
                 {/* Transactions Table */}
-                <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+                <div className="bg-[#1a1a1a] rounded-[2rem] border border-[#333] overflow-hidden">
                     <table className="w-full">
-                        <thead className="bg-slate-50 dark:bg-slate-900/50">
+                        <thead className="bg-[#111] border-b border-[#333]">
                             <tr>
-                                <th className="px-8 py-6 text-left text-xs font-black text-slate-400 uppercase tracking-widest">Date</th>
-                                <th className="px-8 py-6 text-left text-xs font-black text-slate-400 uppercase tracking-widest">Catégorie</th>
-                                <th className="px-8 py-6 text-left text-xs font-black text-slate-400 uppercase tracking-widest">Note</th>
-                                <th className="px-8 py-6 text-right text-xs font-black text-slate-400 uppercase tracking-widest">Montant</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Date</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Category</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Note</th>
+                                <th className="px-8 py-6 text-right text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Amount</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                        <tbody className="divide-y divide-[#333]">
                             {transactions.length > 0 ? (
                                 transactions.map((t: any) => (
-                                    <tr key={t._id} className="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+                                    <tr key={t._id} className="hover:bg-[#222] transition-colors group">
                                         <td className="px-8 py-6">
-                                            <p className="font-bold text-slate-800 dark:text-white">{format(new Date(t.date), 'dd MMM yyyy', { locale: fr })}</p>
+                                            <p className="font-bold text-sm tracking-widest text-[#f5f5f5] uppercase">
+                                                {format(new Date(t.date), 'dd MMM yyyy', { locale: enUS })}
+                                            </p>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full text-[10px] font-black uppercase">
-                                                {t.categoryId?.name || 'Inconnu'}
+                                            <span className="px-3 py-1 bg-[#111] border border-[#333] text-[#888] rounded-full text-[10px] font-black uppercase tracking-widest">
+                                                {t.categoryId?.name || 'Unknown'}
                                             </span>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">{t.note || '-'}</p>
+                                            <p className="text-[#aaa] text-sm font-bold truncate max-w-[200px]">{t.note || '—'}</p>
                                         </td>
                                         <td className="px-8 py-6 text-right">
-                                            <p className={`text-lg font-black ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            <p className={`text-lg font-black tracking-tighter ${t.type === 'income' ? 'text-[#f5f5f5]' : 'text-[#888]'}`}>
                                                 {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                                             </p>
                                         </td>
@@ -173,8 +173,8 @@ export default function TransactionsPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={4} className="px-8 py-20 text-center text-slate-400 font-bold italic">
-                                        Aucune transaction trouvée pour cette période.
+                                    <td colSpan={4} className="px-8 py-20 text-center text-[#666] font-bold text-sm uppercase tracking-widest">
+                                        No records found for this period.
                                     </td>
                                 </tr>
                             )}
@@ -184,21 +184,23 @@ export default function TransactionsPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="mt-8 flex justify-center items-center gap-4">
+                    <div className="mt-8 flex justify-center items-center gap-6">
                         <button
                             disabled={page === 1}
                             onClick={() => setPage(p => p - 1)}
-                            className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 disabled:opacity-30"
+                            className="p-4 bg-[#1a1a1a] rounded-full border border-[#333] hover:bg-[#222] disabled:opacity-30 disabled:hover:bg-[#1a1a1a] transition-all"
                         >
-                            <ChevronLeft className="w-5 h-5" />
+                            <ChevronLeft className="w-5 h-5 text-[#f5f5f5]" />
                         </button>
-                        <span className="font-black text-slate-500 dark:text-slate-400">Page {page} sur {totalPages}</span>
+                        <span className="font-black text-[#888] text-xs uppercase tracking-widest">
+                            {page} / {totalPages}
+                        </span>
                         <button
                             disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 disabled:opacity-30"
+                            className="p-4 bg-[#1a1a1a] rounded-full border border-[#333] hover:bg-[#222] disabled:opacity-30 disabled:hover:bg-[#1a1a1a] transition-all"
                         >
-                            <ChevronRight className="w-5 h-5" />
+                            <ChevronRight className="w-5 h-5 text-[#f5f5f5]" />
                         </button>
                     </div>
                 )}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { X, Plus, Loader2 } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 
 interface TransactionModalProps {
     isOpen: boolean;
@@ -64,45 +64,45 @@ export default function TransactionModal({ isOpen, onClose, onSuccess }: Transac
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="bg-white dark:bg-slate-800 w-full max-w-lg rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-in zoom-in-95 duration-300">
-                <header className="p-8 border-b border-slate-50 dark:border-slate-700/50 flex justify-between items-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="bg-[#1a1a1a] text-[#f5f5f5] w-full max-w-lg rounded-[2rem] border border-[#333] overflow-hidden animate-in zoom-in-95 duration-300">
+                <header className="p-8 border-b border-[#333] flex justify-between items-center bg-[#111]">
                     <div>
-                        <h2 className="text-2xl font-black text-slate-800 dark:text-white">Nouvelle Transaction</h2>
-                        <p className="text-slate-500 text-sm font-medium">Enregistrez une nouvelle opération</p>
+                        <h2 className="text-2xl font-black uppercase tracking-tighter">New Record</h2>
+                        <p className="text-[#888] text-xs font-bold tracking-widest mt-1 uppercase">Log a new operation</p>
                     </div>
-                    <button onClick={onClose} className="p-3 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-2xl transition-all">
-                        <X className="w-6 h-6 text-slate-400" />
+                    <button onClick={onClose} className="p-3 hover:bg-[#222] rounded-full transition-all">
+                        <X className="w-5 h-5 text-[#888] hover:text-[#f5f5f5]" />
                     </button>
                 </header>
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                    <div className="flex bg-slate-50 dark:bg-slate-900 p-2 rounded-2xl gap-2">
+                    <div className="flex bg-[#111] p-2 rounded-2xl gap-2 border border-[#333]">
                         <button
                             type="button"
                             onClick={() => setFormData({ ...formData, type: "expense" })}
-                            className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${formData.type === "expense"
-                                    ? "bg-white dark:bg-slate-800 text-rose-600 shadow-sm"
-                                    : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                            className={`flex-1 py-3 px-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${formData.type === "expense"
+                                    ? "bg-[#f5f5f5] text-black"
+                                    : "text-[#888] hover:text-[#f5f5f5]"
                                 }`}
                         >
-                            Dépense
+                            Expense
                         </button>
                         <button
                             type="button"
                             onClick={() => setFormData({ ...formData, type: "income" })}
-                            className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${formData.type === "income"
-                                    ? "bg-white dark:bg-slate-800 text-emerald-600 shadow-sm"
-                                    : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                            className={`flex-1 py-3 px-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${formData.type === "income"
+                                    ? "bg-[#f5f5f5] text-black"
+                                    : "text-[#888] hover:text-[#f5f5f5]"
                                 }`}
                         >
-                            Revenu
+                            Income
                         </button>
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Montant (€)</label>
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Amount (€)</label>
                             <input
                                 type="number"
                                 step="0.01"
@@ -110,30 +110,30 @@ export default function TransactionModal({ isOpen, onClose, onSuccess }: Transac
                                 value={formData.amount}
                                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                                 placeholder="0.00"
-                                className="w-full bg-slate-50 dark:bg-slate-900 border-none p-4 rounded-2xl outline-none font-black text-lg dark:text-white focus:ring-2 ring-indigo-500/20"
+                                className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-black text-lg text-[#f5f5f5] focus:border-[#666] transition-colors"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Date</label>
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Date</label>
                             <input
                                 type="date"
                                 required
                                 value={formData.date}
                                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                                className="w-full bg-slate-50 dark:bg-slate-900 border-none p-4 rounded-2xl outline-none font-bold text-sm dark:text-white"
+                                className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-sm text-[#f5f5f5] focus:border-[#666] transition-colors"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Catégorie</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Category</label>
                         <select
                             required
                             value={formData.categoryId}
                             onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                            className="w-full bg-slate-50 dark:bg-slate-900 border-none p-4 rounded-2xl outline-none font-bold text-sm dark:text-white"
+                            className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-sm text-[#f5f5f5] focus:border-[#666] transition-colors"
                         >
-                            <option value="">Sélectionnez une catégorie</option>
+                            <option value="">Select a category</option>
                             {categories.map((cat: any) => (
                                 <option key={cat._id} value={cat._id}>{cat.name}</option>
                             ))}
@@ -141,22 +141,21 @@ export default function TransactionModal({ isOpen, onClose, onSuccess }: Transac
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Note (optionnel)</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Note (Optional)</label>
                         <textarea
                             value={formData.note}
                             onChange={(e) => setFormData({ ...formData, note: e.target.value })}
-                            placeholder="Ex: McDonald's, Salaire..."
-                            className="w-full bg-slate-50 dark:bg-slate-900 border-none p-4 rounded-2xl outline-none font-medium text-sm dark:text-white h-24 resize-none"
+                            placeholder="e.g. Salary, Groceries..."
+                            className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-medium text-sm text-[#f5f5f5] h-24 resize-none focus:border-[#666] transition-colors"
                         />
                     </div>
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-5 rounded-[2rem] font-black text-lg shadow-xl shadow-indigo-600/20 transition-all hover:-translate-y-1 active:scale-[0.98] flex items-center justify-center gap-3 ${formData.type === 'income' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
-                            }`}
+                        className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                     >
-                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Enregistrer"}
+                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Save Record"}
                     </button>
                 </form>
             </div>

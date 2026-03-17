@@ -26,7 +26,7 @@ export default function LoginPage() {
             });
 
             if (res?.error) {
-                setError("Identifiants incorrects.");
+                setError("Invalid credentials.");
                 setLoading(false);
                 return;
             }
@@ -39,38 +39,38 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-6 transition-colors duration-500">
-            <div className="w-full max-w-lg bg-white dark:bg-slate-800 p-10 rounded-[3rem] shadow-2xl shadow-indigo-500/10 border border-slate-100 dark:border-slate-700 animate-in fade-in zoom-in duration-500">
+        <div className="min-h-screen bg-black flex items-center justify-center p-6 transition-colors font-sans text-[#f5f5f5]">
+            <div className="w-full max-w-lg bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] animate-in fade-in zoom-in duration-500">
                 <div className="text-center mb-10">
-                    <div className="w-16 h-16 bg-indigo-600 rounded-3xl mx-auto flex items-center justify-center text-white font-black text-3xl shadow-xl shadow-indigo-600/30 mb-6">F.</div>
-                    <h2 className="text-3xl font-black text-slate-800 dark:text-white">Ravi de vous revoir</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Connectez-vous à votre compte Fncly.</p>
+                    <div className="w-16 h-16 bg-[#f5f5f5] rounded-2xl mx-auto flex items-center justify-center text-black font-black text-3xl mb-6">F.</div>
+                    <h2 className="text-4xl font-black uppercase tracking-tighter text-[#f5f5f5]">System Login</h2>
+                    <p className="text-[#888] font-bold text-xs uppercase tracking-widest mt-2">Identify to proceed</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {error && (
-                        <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 text-rose-600 dark:text-rose-400 p-4 rounded-2xl text-sm font-bold animate-in slide-in-from-top duration-300">
-                            {error}
+                        <div className="bg-[#111] border border-rose-900 text-rose-500 p-4 rounded-2xl text-[10px] uppercase font-black tracking-widest animate-in slide-in-from-top duration-300">
+                            [ERROR] {error}
                         </div>
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Email</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Email Address</label>
                         <input
                             type="email"
-                            placeholder="votre@email.com"
-                            className="w-full bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-indigo-500 dark:focus:border-indigo-600 p-4 rounded-2xl outline-none transition-all dark:text-white font-bold"
+                            placeholder="USER@FNCLY.NET"
+                            className="w-full bg-[#111] border border-[#333] focus:border-[#666] p-4 rounded-2xl outline-none transition-colors text-white font-bold text-sm uppercase"
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Mot de passe</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Passcode</label>
                         <input
                             type="password"
                             placeholder="••••••••"
-                            className="w-full bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-indigo-500 dark:focus:border-indigo-600 p-4 rounded-2xl outline-none transition-all dark:text-white font-bold"
+                            className="w-full bg-[#111] border border-[#333] focus:border-[#666] p-4 rounded-2xl outline-none transition-colors text-white font-bold text-sm"
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
@@ -79,16 +79,16 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white py-5 rounded-[2rem] font-black text-lg shadow-xl shadow-indigo-600/30 transition-all hover:-translate-y-1 active:scale-[0.98] flex items-center justify-center gap-3"
+                        className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                     >
-                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Se connecter"}
+                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Authenticate"}
                     </button>
                 </form>
 
-                <p className="text-center mt-10 text-slate-500 dark:text-slate-400 font-bold">
-                    Pas encore de compte ?{" "}
-                    <Link href="/register" className="text-indigo-600 dark:text-indigo-400 hover:underline underline-offset-4 decoration-2">
-                        Créer un compte
+                <p className="text-center mt-10 text-[#666] text-xs font-black uppercase tracking-widest">
+                    No clearance?{" "}
+                    <Link href="/register" className="text-[#f5f5f5] hover:underline underline-offset-4 decoration-2">
+                        Request Access
                     </Link>
                 </p>
             </div>

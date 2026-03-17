@@ -18,10 +18,6 @@ import {
     Pie,
     Cell
 } from 'recharts';
-import {
-    TrendingUp,
-    Activity
-} from "lucide-react";
 import { ChartTooltip } from "@/components/ChartTooltip";
 
 export default function StatsPage() {
@@ -52,41 +48,50 @@ export default function StatsPage() {
         }
     };
 
-    const formatCurrency = (val: number) =>
-        new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(val);
-
     if (status === "loading") {
         return <Loader show={true} />;
     }
 
+    const savingsRatio = stats.income > 0 ? Math.round(((stats.income - stats.expense) / stats.income) * 100) : 0;
+    const clampedRatio = Math.max(0, Math.min(100, savingsRatio));
+
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex transition-colors duration-500">
+        <div className="min-h-screen bg-black flex font-sans text-[#f5f5f5]">
             <Sidebar />
             <Loader show={loading} />
 
             <main className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full">
-                <header className="mb-10">
-                    <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">Analyses Financières</h1>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium italic">Visualisez vos habitudes et optimisez vos finances</p>
+                <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 uppercase">
+                    <div>
+                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">ANALYTICS</h1>
+                        <p className="text-[#888] font-bold mt-2 tracking-widest text-xs flex gap-4 uppercase">
+                            <span>Diagnostic & Metrics</span>
+                        </p>
+                    </div>
                 </header>
 
-                <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Detailed Evolution */}
-                    <div className="md:col-span-2 bg-white dark:bg-slate-800 p-10 rounded-[3rem] shadow-xl border border-slate-100 dark:border-slate-700">
-                        <h3 className="text-2xl font-black text-slate-800 dark:text-white mb-8 flex items-center gap-3">
-                            <TrendingUp className="w-6 h-6 text-indigo-500" />
-                            Tendance des Revenus vs Dépenses
-                        </h3>
+                    <div className="md:col-span-2 bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333]">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="text-sm font-black text-[#f5f5f5] tracking-widest uppercase">Income vs Expense Trend</h3>
+                            <span className="text-[#666] text-[10px] font-black tracking-widest">[ 6 MONTHS ]</span>
+                        </div>
                         <div className="h-[400px] w-full">
                             {mounted && (
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={stats.monthly}>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" opacity={0.5} />
-                                        <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                                    <BarChart data={stats.monthly} barGap={2}>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.5} />
+                                        <XAxis 
+                                            dataKey="month" 
+                                            axisLine={false} 
+                                            tickLine={false} 
+                                            tick={{ fill: '#888', fontSize: 10, fontWeight: 'bold' }} 
+                                        />
                                         <YAxis hide />
-                                        <Tooltip content={<ChartTooltip />} cursor={{ fill: 'rgba(99,102,241,0.05)' }} />
-                                        <Bar dataKey="income" fill="#10B981" radius={[10, 10, 0, 0]} />
-                                        <Bar dataKey="expense" fill="#F43F5E" radius={[10, 10, 0, 0]} />
+                                        <Tooltip content={<ChartTooltip />} cursor={{ fill: '#222' }} />
+                                        <Bar dataKey="income" fill="#f5f5f5" radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="expense" fill="#444" radius={[4, 4, 0, 0]} />
                                     </BarChart>
                                 </ResponsiveContainer>
                             )}
@@ -94,41 +99,44 @@ export default function StatsPage() {
                     </div>
 
                     {/* Savings Ratio */}
-                    <div className="bg-white dark:bg-slate-800 p-10 rounded-[3rem] shadow-xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center">
-                        <Activity className="w-10 h-10 text-emerald-500 mb-6" />
-                        <h3 className="text-2xl font-black text-slate-800 dark:text-white mb-2">Taux d'Épargne</h3>
-                        <p className="text-slate-500 font-bold mb-6 italic">Part de vos revenus mise de côté ce mois-ci</p>
-                        <div className="text-6xl font-black text-emerald-600 mb-4 tracking-tighter">
-                            {stats.income > 0 ? Math.round(((stats.income - stats.expense) / stats.income) * 100) : 0}%
+                    <div className="bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] flex flex-col items-center justify-center text-center col-span-1 md:col-span-1 min-h-[300px]">
+                        <h3 className="text-sm font-black text-[#888] tracking-widest uppercase mb-6">Savings Ratio</h3>
+                        <div className="text-7xl font-black text-[#f5f5f5] mb-8 tracking-tighter">
+                            {savingsRatio}%
                         </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-900 h-4 rounded-full overflow-hidden">
+                        <div className="w-full bg-[#111] h-2 rounded-full overflow-hidden">
                             <div
-                                className="bg-emerald-500 h-full transition-all duration-1000"
-                                style={{ width: `${stats.income > 0 ? Math.max(0, Math.min(100, Math.round(((stats.income - stats.expense) / stats.income) * 100))) : 0}%` }}
+                                className="bg-[#f5f5f5] h-full transition-all duration-1000"
+                                style={{ width: `${clampedRatio}%` }}
                             ></div>
                         </div>
+                        <p className="text-[#666] text-[10px] font-black uppercase tracking-widest mt-6">Portion of income saved</p>
                     </div>
 
                     {/* Breakdown Pie Chart */}
-                    <div className="bg-white dark:bg-slate-800 p-10 rounded-[3rem] shadow-xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center">
+                    <div className="bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] flex flex-col items-center justify-center text-center col-span-1 md:col-span-1 min-h-[300px]">
+                        <h3 className="text-sm font-black text-[#888] tracking-widest uppercase mb-6">Flow Distribution</h3>
                         <div className="w-48 h-48 rounded-full flex items-center justify-center">
                             {mounted && (
                                 <PieChart width={192} height={192}>
                                     <Pie
-                                        data={[{ name: 'Solde', value: stats.balance > 0 ? stats.balance : 0 }, { name: 'Dépenses', value: stats.expense }]}
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        paddingAngle={5}
+                                        data={[
+                                            { name: 'Balance', value: stats.balance > 0 ? stats.balance : 0 }, 
+                                            { name: 'Expenses', value: stats.expense }
+                                        ]}
+                                        innerRadius={70}
+                                        outerRadius={90}
+                                        paddingAngle={2}
                                         dataKey="value"
+                                        stroke="none"
                                     >
-                                        <Cell key={`cell-0`} fill="#6366f1" />
-                                        <Cell key={`cell-1`} fill="#F43F5E" />
+                                        <Cell fill="#f5f5f5" />
+                                        <Cell fill="#333" />
                                     </Pie>
                                 </PieChart>
                             )}
                         </div>
-                        <h3 className="text-xl font-black text-slate-800 dark:text-white mt-8 mb-2">Répartition des Flux</h3>
-                        <p className="text-slate-400 font-bold text-sm tracking-widest uppercase">Ratio Solde / Dépenses</p>
+                        <p className="text-[#666] text-[10px] font-black uppercase tracking-widest mt-6">Balance vs Expenditures</p>
                     </div>
                 </section>
             </main>

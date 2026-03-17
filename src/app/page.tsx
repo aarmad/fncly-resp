@@ -16,12 +16,6 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
-import {
-  ArrowUpRight,
-  ArrowDownRight,
-  Wallet,
-  Plus
-} from "lucide-react";
 import { ChartTooltip } from "@/components/ChartTooltip";
 
 export default function Dashboard() {
@@ -61,83 +55,88 @@ export default function Dashboard() {
     new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(val);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex transition-colors duration-500">
+    <div className="min-h-screen bg-black flex transition-colors duration-500 font-sans text-[#f5f5f5]">
       <Sidebar />
       <Loader show={loading} />
 
       <main className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+        {/* Header - Huge Brutalist Typography */}
+        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 uppercase">
           <div>
-            <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">Vue d'ensemble</h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium italic">Tableau de bord financier</p>
+            <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-[#fff]">FNCLY<br/>OVERVIEW</h1>
+            <p className="text-[#888] font-bold mt-2 tracking-widest text-xs flex gap-4">
+              <span>[{new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}]</span>
+              <span>[ {session?.user?.name || "User"} ]</span>
+            </p>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl shadow-lg shadow-indigo-600/20 transition-all font-bold flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              Nouvelle Transaction
-            </button>
-          </div>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="bg-[#222] hover:bg-[#333] text-[#f5f5f5] px-6 py-3 rounded-full transition-all font-bold tracking-widest text-xs uppercase"
+          >
+            New Record
+          </button>
         </header>
 
-        {/* Stats Section */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {/* Balance */}
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-700">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-widest bg-indigo-50 dark:bg-indigo-500/10 px-3 py-1 rounded-full">Solde Total</span>
-              <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 rounded-lg"><Wallet className="w-5 h-5 text-indigo-600" /></div>
+        {/* Bento Grid */}
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+          
+          {/* Main Balance Box - Spans 2 cols */}
+          <div className="md:col-span-2 bg-[#f5f5f5] text-black p-8 rounded-[2rem] flex flex-col justify-between min-h-[200px]">
+            <span className="text-xs font-black uppercase tracking-widest opacity-50">Current Balance</span>
+            <div>
+              <p className="text-6xl font-black tracking-tighter">{formatCurrency(stats.balance)}</p>
+              <p className="text-sm font-bold opacity-50 uppercase mt-2">Available Funds</p>
             </div>
-            <p className="text-4xl font-black text-slate-800 dark:text-white">{formatCurrency(stats.balance)}</p>
           </div>
 
-          {/* Income */}
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-700">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-widest bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1 rounded-full">Revenus</span>
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg"><ArrowUpRight className="w-5 h-5 text-emerald-600" /></div>
+          {/* Income Box */}
+          <div className="bg-[#1a1a1a] p-8 rounded-[2rem] flex flex-col justify-between border border-[#333] min-h-[200px]">
+            <span className="text-[#888] text-xs font-black uppercase tracking-widest">Total Income</span>
+            <div>
+              <p className="text-3xl font-black text-[#f5f5f5]">+{formatCurrency(stats.income)}</p>
             </div>
-            <p className="text-4xl font-black text-emerald-600">+{formatCurrency(stats.income)}</p>
           </div>
 
-          {/* Expenses */}
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-700">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-widest bg-rose-50 dark:bg-rose-500/10 px-3 py-1 rounded-full">Dépenses</span>
-              <div className="p-2 bg-rose-50 dark:bg-rose-500/10 rounded-lg"><ArrowDownRight className="w-5 h-5 text-rose-600" /></div>
+          {/* Expenses Box */}
+          <div className="bg-[#1a1a1a] p-8 rounded-[2rem] flex flex-col justify-between border border-[#333] min-h-[200px]">
+            <span className="text-[#888] text-xs font-black uppercase tracking-widest">Total Expenses</span>
+            <div>
+              <p className="text-3xl font-black text-[#f5f5f5]">{formatCurrency(stats.expense)}</p>
             </div>
-            <p className="text-4xl font-black text-rose-600">-{formatCurrency(stats.expense)}</p>
           </div>
         </section>
 
-        {/* Chart Section */}
-        <section className="bg-white dark:bg-slate-800 p-8 rounded-[3rem] shadow-xl border border-slate-100 dark:border-slate-700 min-h-[400px]">
-          <h3 className="text-2xl font-black text-slate-800 dark:text-white mb-8 flex items-center gap-3">
-            <div className="w-2 h-8 bg-indigo-500 rounded-full"></div>
-            Évolution des Flux
-          </h3>
-          <div className="h-[350px] w-full">
+        {/* Chart Flow */}
+        <section className="bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333] min-h-[400px]">
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="text-sm font-black text-[#f5f5f5] tracking-widest uppercase">Cash Flow Analysis</h3>
+            <span className="text-[#666] text-[10px] font-black tracking-widest">[ Last 6 Months ]</span>
+          </div>
+          <div className="h-[300px] w-full">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.monthly}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" opacity={0.5} />
-                  <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                <BarChart data={stats.monthly} barGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.5} />
+                  <XAxis 
+                    dataKey="month" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#888', fontSize: 10, fontWeight: 'bold' }} 
+                  />
                   <YAxis hide />
-                  <Tooltip content={<ChartTooltip />} cursor={{ fill: 'rgba(99,102,241,0.05)' }} />
-                  <Bar dataKey="income" fill="#10B981" radius={[10, 10, 0, 0]} />
-                  <Bar dataKey="expense" fill="#F43F5E" radius={[10, 10, 0, 0]} />
+                  <Tooltip content={<ChartTooltip />} cursor={{ fill: '#222' }} />
+                  <Bar dataKey="income" fill="#f5f5f5" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="expense" fill="#444" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
           </div>
         </section>
 
-        <TransactionModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSuccess={fetchStats}
+        <TransactionModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          onSuccess={fetchStats} 
         />
       </main>
     </div>
