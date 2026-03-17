@@ -63,9 +63,9 @@ export default function StatsPage() {
             <main className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full">
                 <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 uppercase">
                     <div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">ANALYTICS</h1>
+                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">ANALYSES</h1>
                         <p className="text-[#888] font-bold mt-2 tracking-widest text-xs flex gap-4 uppercase">
-                            <span>Diagnostic & Metrics</span>
+                            <span>Diagnostic & Métriques</span>
                         </p>
                     </div>
                 </header>
@@ -74,8 +74,8 @@ export default function StatsPage() {
                     {/* Detailed Evolution */}
                     <div className="md:col-span-2 bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333]">
                         <div className="flex justify-between items-center mb-8">
-                            <h3 className="text-sm font-black text-[#f5f5f5] tracking-widest uppercase">Income vs Expense Trend</h3>
-                            <span className="text-[#666] text-[10px] font-black tracking-widest">[ 6 MONTHS ]</span>
+                            <h3 className="text-sm font-black text-[#f5f5f5] tracking-widest uppercase">Tendance Revenus vs Dépenses</h3>
+                            <span className="text-[#666] text-[10px] font-black tracking-widest">[ 6 MOIS ]</span>
                         </div>
                         <div className="h-[400px] w-full">
                             {mounted && (
@@ -100,7 +100,7 @@ export default function StatsPage() {
 
                     {/* Savings Ratio */}
                     <div className="bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] flex flex-col items-center justify-center text-center col-span-1 md:col-span-1 min-h-[300px]">
-                        <h3 className="text-sm font-black text-[#888] tracking-widest uppercase mb-6">Savings Ratio</h3>
+                        <h3 className="text-sm font-black text-[#888] tracking-widest uppercase mb-6">Taux d'Épargne</h3>
                         <div className="text-7xl font-black text-[#f5f5f5] mb-8 tracking-tighter">
                             {savingsRatio}%
                         </div>
@@ -110,19 +110,19 @@ export default function StatsPage() {
                                 style={{ width: `${clampedRatio}%` }}
                             ></div>
                         </div>
-                        <p className="text-[#666] text-[10px] font-black uppercase tracking-widest mt-6">Portion of income saved</p>
+                        <p className="text-[#666] text-[10px] font-black uppercase tracking-widest mt-6">Part des revenus épargnée</p>
                     </div>
 
                     {/* Breakdown Pie Chart */}
                     <div className="bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] flex flex-col items-center justify-center text-center col-span-1 md:col-span-1 min-h-[300px]">
-                        <h3 className="text-sm font-black text-[#888] tracking-widest uppercase mb-6">Flow Distribution</h3>
+                        <h3 className="text-sm font-black text-[#888] tracking-widest uppercase mb-6">Distribution des Flux</h3>
                         <div className="w-48 h-48 rounded-full flex items-center justify-center">
                             {mounted && (
                                 <PieChart width={192} height={192}>
                                     <Pie
                                         data={[
-                                            { name: 'Balance', value: stats.balance > 0 ? stats.balance : 0 }, 
-                                            { name: 'Expenses', value: stats.expense }
+                                            { name: 'Solde', value: stats.balance > 0 ? stats.balance : 0 }, 
+                                            { name: 'Dépenses', value: stats.expense }
                                         ]}
                                         innerRadius={70}
                                         outerRadius={90}
@@ -136,7 +136,7 @@ export default function StatsPage() {
                                 </PieChart>
                             )}
                         </div>
-                        <p className="text-[#666] text-[10px] font-black uppercase tracking-widest mt-6">Balance vs Expenditures</p>
+                        <p className="text-[#666] text-[10px] font-black uppercase tracking-widest mt-6">Solde vs Dépenses</p>
                     </div>
                 </section>
             </main>

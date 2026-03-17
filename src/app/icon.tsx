@@ -10,17 +10,17 @@ export default function Icon() {
                 style={{
                     width: 64,
                     height: 64,
-                    background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                    borderRadius: 18,
+                    background: "#000",
+                    borderRadius: 12,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 8px 32px rgba(79,70,229,0.4)",
+                    border: "2px solid #333",
                 }}
             >
                 <span
                     style={{
-                        color: "white",
+                        color: "#f5f5f5",
                         fontSize: 32,
                         fontWeight: 900,
                         letterSpacing: "-1px",

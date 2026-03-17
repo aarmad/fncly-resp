@@ -30,7 +30,7 @@ export default function RegisterPage() {
                 router.replace("/login");
             }
         } catch (error: any) {
-            setError(error.response?.data?.message || "An error occurred during registration.");
+            setError(error.response?.data?.message || "Une erreur est survenue lors de l'inscription.");
             setLoading(false);
         }
     };
@@ -40,8 +40,8 @@ export default function RegisterPage() {
             <div className="w-full max-w-lg bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] animate-in fade-in zoom-in duration-500">
                 <div className="text-center mb-10">
                     <div className="w-16 h-16 bg-[#f5f5f5] rounded-2xl mx-auto flex items-center justify-center text-black font-black text-3xl mb-6">F.</div>
-                    <h2 className="text-4xl font-black uppercase tracking-tighter text-[#f5f5f5]">System Access</h2>
-                    <p className="text-[#888] font-bold text-xs uppercase tracking-widest mt-2">Clearance Request</p>
+                    <h2 className="text-4xl font-black uppercase tracking-tighter text-[#f5f5f5]">Accès Système</h2>
+                    <p className="text-[#888] font-bold text-xs uppercase tracking-widest mt-2">Demande d'autorisation</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -52,7 +52,7 @@ export default function RegisterPage() {
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Operator Name</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Nom de l'opérateur</label>
                         <input
                             type="text"
                             placeholder="JOHN DOE"
@@ -63,7 +63,7 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Email Address</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Adresse Email</label>
                         <input
                             type="email"
                             placeholder="USER@FNCLY.NET"
@@ -74,7 +74,7 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Init Passcode</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Mot de passe initial</label>
                         <input
                             type="password"
                             placeholder="••••••••"
@@ -89,14 +89,14 @@ export default function RegisterPage() {
                         disabled={loading}
                         className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                     >
-                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Request Clearance"}
+                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Demander l'accès"}
                     </button>
                 </form>
 
                 <p className="text-center mt-10 text-[#666] text-xs font-black uppercase tracking-widest">
-                    Already an Operator?{" "}
+                    Déjà Opérateur ?{" "}
                     <Link href="/login" className="text-[#f5f5f5] hover:underline underline-offset-4 decoration-2">
-                        Authenticate Here
+                        Vérifiez votre identité
                     </Link>
                 </p>
             </div>

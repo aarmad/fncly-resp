@@ -1,304 +1,126 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
-import TransactionModal from "@/components/TransactionModal";
-import GoalModal from "@/components/GoalModal";
-import ContactModal from "@/components/ContactModal";
-import Loader from "@/components/Loader";
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
-import { ChartTooltip } from "@/components/ChartTooltip";
-import { Bell, ArrowUpRight, TrendingUp, Globe, Plus, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Activity, Target, Bell, Users, Globe, ChevronRight } from "lucide-react";
 
-export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const [stats, setStats] = useState<any>({ balance: 0, income: 0, expense: 0, monthly: [], by_category: [], goals: [], contacts: [], notifications: [], latestInvoice: null });
-  const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    if (status === "unauthenticated") {
-      redirect("/login");
-    }
-    if (status === "authenticated") {
-      fetchStats();
-    }
-  }, [status]);
-
-  const fetchStats = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get("/api/dashboard/stats");
-      setStats(res.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (status === "loading") {
-    return <Loader show={true} />;
-  }
-
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(val);
-
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-black flex transition-colors duration-500 font-sans text-[#f5f5f5]">
-      <Sidebar />
-      <Loader show={loading} />
-
-      <main className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full pb-20 overflow-y-auto">
-        {/* Header - Huge Brutalist Typography */}
-        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 uppercase">
-          <div>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-[#fff]">FNCLY<br/>OVERVIEW</h1>
-            <p className="text-[#888] font-bold mt-2 tracking-widest text-[10px] md:text-xs flex gap-4">
-              <span>[{new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}]</span>
-              <span>[ {session?.user?.name || "User"} ]</span>
-            </p>
-          </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="bg-[#222] hover:bg-[#333] text-[#f5f5f5] px-6 py-3 rounded-full transition-all font-bold tracking-widest text-[10px] md:text-xs uppercase whitespace-nowrap"
-          >
-            New Record
-          </button>
-        </header>
-
-        {/* Complex Bento Layout */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-          
-          {/* LEFT COLUMN: Main Stats & Charts (col-span-8) */}
-          <div className="xl:col-span-8 space-y-4">
-             
-             {/* Top Row: Balance & Activity */}
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-[#f5f5f5] text-black p-8 rounded-[2rem] flex flex-col justify-between min-h-[240px]">
-                   <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">Current Balance</span>
-                   <div>
-                     <p className="text-5xl lg:text-7xl font-black tracking-tighter">{formatCurrency(stats.balance)}</p>
-                     <p className="text-[10px] font-bold opacity-50 uppercase tracking-widest mt-2">[ Available Funds ]</p>
-                   </div>
-                </div>
-
-                {/* Income / Expense split */}
-                <div className="grid grid-cols-1 gap-4">
-                   <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333] flex justify-between items-center hover:bg-[#222] transition-colors cursor-pointer">
-                      <div>
-                        <span className="text-[#888] text-[10px] font-black uppercase tracking-[0.2em]">Total Income</span>
-                        <p className="text-2xl lg:text-3xl font-black text-[#f5f5f5] mt-1">+{formatCurrency(stats.income)}</p>
-                      </div>
-                      <ArrowUpRight className="w-8 h-8 text-[#fff] opacity-20" />
-                   </div>
-                   <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333] flex justify-between items-center hover:bg-[#222] transition-colors cursor-pointer">
-                      <div>
-                        <span className="text-[#888] text-[10px] font-black uppercase tracking-[0.2em]">Total Expenses</span>
-                        <p className="text-2xl lg:text-3xl font-black text-[#888] mt-1">{formatCurrency(stats.expense)}</p>
-                      </div>
-                      <TrendingUp className="w-8 h-8 text-[#fff] opacity-20" />
-                   </div>
-                </div>
-             </div>
-
-             {/* Chart Flow */}
-             <div className="bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333] h-[400px] flex flex-col">
-                <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-sm font-black text-[#f5f5f5] tracking-widest uppercase">Cash Flow Analysis</h3>
-                  <span className="text-[#666] text-[10px] font-black tracking-widest">[ Last 6 Months ]</span>
-                </div>
-                <div className="flex-1 w-full min-h-0">
-                  {mounted && (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={stats.monthly} barGap={2}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.5} />
-                        <XAxis 
-                          dataKey="month" 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fill: '#888', fontSize: 10, fontWeight: 'bold' }} 
-                        />
-                        <YAxis hide />
-                        <Tooltip content={<ChartTooltip />} cursor={{ fill: '#222' }} />
-                        <Bar dataKey="income" fill="#f5f5f5" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="expense" fill="#444" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  )}
-                </div>
-             </div>
-
-             {/* Bottom Row: Savings Goals / Projects & Map */}
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                
-                {/* Savings Projects */}
-                <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333]">
-                    <div className="flex justify-between items-center mb-6">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888]">Savings Projects</span>
-                        <button onClick={() => setIsGoalModalOpen(true)} className="text-[10px] font-black uppercase tracking-widest text-[#f5f5f5] bg-[#222] hover:bg-[#333] px-3 py-1 rounded-full transition-colors">Add</button>
-                    </div>
-                    <div className="space-y-4 max-h-[160px] overflow-y-auto scrollbar-hide">
-                        {stats.goals && stats.goals.length > 0 ? stats.goals.map((goal: any) => {
-                            const percent = goal.targetAmount > 0 ? Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) : 0;
-                            return (
-                                <div key={goal._id} className="bg-[#111] border border-[#333] p-4 rounded-xl flex items-center justify-between group cursor-pointer hover:border-[#666] transition-colors">
-                                    <div className="w-full">
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="font-bold text-sm text-[#f5f5f5] tracking-wide">{goal.name}</span>
-                                            <span className="text-[#888] text-xs font-black">{percent}%</span>
-                                        </div>
-                                        <div className="w-full bg-[#222] h-1.5 rounded-full overflow-hidden">
-                                            <div className="bg-[#f5f5f5] h-full" style={{ width: `${percent}%` }}></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        }) : (
-                            <div className="text-center py-4">
-                                <span className="text-[#666] text-[10px] font-black uppercase tracking-widest">No Projects Defined</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Map / Tracking feature */}
-                <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333] overflow-hidden relative min-h-[220px] flex flex-col justify-between group cursor-pointer">
-                    <Globe className="w-48 h-48 absolute -right-10 -bottom-10 text-[#222] opacity-50 group-hover:rotate-12 group-hover:scale-110 transition-transform duration-700" />
-                    <div>
-                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888] relative z-10">Global Tracking</span>
-                       <p className="text-2xl font-black tracking-tighter text-[#f5f5f5] mt-2 relative z-10">France</p>
-                       <p className="text-[10px] font-bold text-[#666] uppercase tracking-widest mt-1">[ Primary Region ]</p>
-                    </div>
-                    <div className="relative z-10 flex items-center gap-2 mt-8">
-                       <div className="w-2 h-2 rounded-full bg-[#f5f5f5] animate-pulse"></div>
-                       <span className="text-[10px] font-black uppercase tracking-widest text-[#f5f5f5]">Monitoring Active</span>
-                    </div>
-                </div>
-
-             </div>
-
-          </div>
-
-          {/* RIGHT COLUMN: Sidebar elements (col-span-4) */}
-          <div className="xl:col-span-4 space-y-4">
-             
-             {/* Notifications / Reminders */}
-             <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333]">
-               <div className="flex items-center gap-2 mb-6">
-                  <Bell className="w-4 h-4 text-[#888]" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f5f5f5]">Notifications</span>
-                  <span className="ml-auto bg-[#333] text-[9px] px-2 py-0.5 rounded-full text-[#888] font-black">
-                     {stats.notifications ? stats.notifications.length : 0} NEW
-                  </span>
-               </div>
-               <div className="space-y-3">
-                  {stats.notifications && stats.notifications.length > 0 ? stats.notifications.slice(0, 3).map((notif: any) => (
-                      <div key={notif._id} className="bg-[#222] p-4 rounded-xl border border-[#444] cursor-pointer hover:bg-[#333] transition-colors">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-[#888] block mb-1">{notif.type} | {notif.title}</span>
-                         <p className="text-sm font-bold tracking-wide text-[#f5f5f5]">{notif.message}</p>
-                         <span className="text-[10px] font-bold text-[#666] mt-2 block tracking-widest">{new Date(notif.date).toLocaleDateString()}</span>
-                      </div>
-                  )) : (
-                      <div className="bg-[#111] p-4 rounded-xl border border-[#333] opacity-60">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-[#888] block mb-1">System Action</span>
-                         <p className="text-sm font-bold tracking-wide text-[#888]">No notifications present.</p>
-                      </div>
-                  )}
-               </div>
-             </div>
-
-             {/* Receipt / Invoice Breakdown */}
-             <div className="bg-[#f5f5f5] text-black p-8 rounded-[2rem] border border-[#ccc]">
-                {stats.latestInvoice ? (
-                    <>
-                        <div className="flex justify-between items-start mb-6 border-b border-[#ddd] pb-4">
-                           <div>
-                              <h4 className="font-black uppercase tracking-tighter text-3xl leading-none">LATEST <br/> EXPENSE</h4>
-                              <p className="text-[9px] font-black uppercase tracking-widest text-[#888] mt-2">
-                                [ ID: {stats.latestInvoice._id ? stats.latestInvoice._id.slice(-6).toUpperCase() : 'N/A'} ]
-                              </p>
-                           </div>
-                        </div>
-                        <div className="space-y-3 text-[10px] font-black uppercase tracking-[0.15em]">
-                           <div className="flex justify-between">
-                              <span className="text-[#666]">Category:</span>
-                              <span className="truncate max-w-[120px]">{stats.latestInvoice.categoryId?.name || 'Uncategorized'}</span>
-                           </div>
-                           <div className="flex justify-between">
-                              <span className="text-[#666]">Note:</span>
-                              <span className="truncate max-w-[120px]">{stats.latestInvoice.note || '-'}</span>
-                           </div>
-                           <div className="flex justify-between text-[#888]">
-                              <span>Date:</span>
-                              <span>{new Date(stats.latestInvoice.date).toLocaleDateString()}</span>
-                           </div>
-                           <div className="flex justify-between border-t border-[#ddd] pt-4 mt-2">
-                              <span className="text-[#000] text-xs">Total Due:</span>
-                              <span className="text-xl tracking-tighter text-[#000]">{formatCurrency(stats.latestInvoice.amount)}</span>
-                           </div>
-                        </div>
-                    </>
-                ) : (
-                    <div className="text-center py-10 opacity-50">
-                        <span className="text-[10px] font-black uppercase tracking-widest">No Expenses Logged</span>
-                    </div>
-                )}
-             </div>
-
-             {/* Contacts / Quick Send */}
-             <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333]">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888] block mb-6">Quick Transfer</span>
-                <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide">
-                   {stats.contacts && stats.contacts.map((contact: any) => (
-                      <button key={contact._id} title={contact.name} className="flex-shrink-0 w-12 h-12 rounded-full border border-[#333] font-black text-sm flex items-center justify-center transition-all bg-[#111] text-[#888] hover:bg-[#f5f5f5] hover:text-black hover:border-transparent">
-                         {contact.initials || "?"}
-                      </button>
-                   ))}
-                   <button onClick={() => setIsContactModalOpen(true)} className="flex-shrink-0 w-12 h-12 rounded-full border border-[#333] font-black text-sm flex items-center justify-center transition-all bg-[#f5f5f5] text-black hover:bg-[#ccc]">
-                      <Plus className="w-4 h-4" />
-                   </button>
-                </div>
-                <button onClick={() => setIsModalOpen(true)} className="w-full mt-2 bg-[#111] hover:bg-[#222] transition-colors border border-[#333] rounded-xl p-4 flex justify-between items-center group">
-                   <span className="text-[#888] group-hover:text-[#f5f5f5] text-[10px] font-black tracking-widest uppercase transition-colors">Select Contact</span>
-                   <ChevronRight className="w-4 h-4 text-[#666] group-hover:text-[#f5f5f5] transition-colors" />
-                </button>
-             </div>
-
-          </div>
+    <div className="min-h-screen bg-black text-[#f5f5f5] font-sans selection:bg-[#333] selection:text-[#f5f5f5] overflow-x-hidden">
+      
+      {/* Navbar */}
+      <nav className="fixed top-0 w-full p-6 lg:p-10 flex justify-between items-center z-50 bg-black/80 backdrop-blur-md border-b border-[#222]">
+        <div className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+          <div className="w-10 h-10 bg-[#f5f5f5] rounded-lg flex items-center justify-center text-black font-black text-2xl">F.</div>
+          <span className="text-2xl font-black tracking-tighter uppercase">FNCLY.</span>
         </div>
+        <div className="flex gap-4 items-center">
+          <Link href="/login" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[#888] hover:text-[#f5f5f5] transition-colors hidden md:block">
+            Se Connecter
+          </Link>
+          <Link href="/register" className="bg-[#f5f5f5] text-black px-6 py-3 rounded-full font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-[#ccc] transition-colors">
+            S'inscrire
+          </Link>
+        </div>
+      </nav>
 
-        <TransactionModal 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
-          onSuccess={fetchStats} 
-        />
-        <GoalModal 
-          isOpen={isGoalModalOpen} 
-          onClose={() => setIsGoalModalOpen(false)} 
-          onSuccess={fetchStats} 
-        />
-        <ContactModal 
-          isOpen={isContactModalOpen} 
-          onClose={() => setIsContactModalOpen(false)} 
-          onSuccess={fetchStats} 
-        />
+      <main className="pt-32 pb-20 px-6 lg:px-10 max-w-7xl mx-auto flex flex-col gap-24">
+        
+        {/* Hero Section */}
+        <section className="flex flex-col items-start gap-8 mt-10 md:mt-20">
+          <div className="inline-block border border-[#333] rounded-full px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#888]">
+            Lancement V2.0
+          </div>
+          <h1 className="text-6xl md:text-8xl lg:text-[140px] font-black tracking-tighter leading-[0.85] text-white uppercase break-words w-full">
+            Contrôle <br />
+            <span className="text-[#666]">Absolu.</span>
+          </h1>
+          <p className="text-[#888] max-w-xl text-lg md:text-2xl font-bold tracking-wide leading-relaxed">
+            Reprenez en main vos finances avec FNCLY. Une interface minimaliste, brutale et redoutablement efficace. Pas de distractions.
+          </p>
+          <div className="flex flex-wrap gap-4 mt-4">
+            <Link href="/register" className="group bg-[#f5f5f5] text-black px-8 py-5 rounded-[2rem] font-black text-sm md:text-lg uppercase tracking-widest hover:bg-[#ccc] transition-all flex items-center gap-3 active:scale-[0.98]">
+              Commencer Maintenant
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link href="/login" className="px-8 py-5 rounded-[2rem] font-black text-sm md:text-lg uppercase tracking-widest text-[#888] hover:text-[#f5f5f5] border border-[#333] hover:border-[#666] transition-all bg-[#111] hover:bg-[#222]">
+              Déjà Membre
+            </Link>
+          </div>
+        </section>
+
+        {/* Features / Bento Box */}
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          
+          <div className="bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] flex flex-col justify-between min-h-[300px] hover:border-[#666] transition-colors group">
+            <Activity className="w-12 h-12 text-[#666] group-hover:text-[#f5f5f5] transition-colors mb-8" />
+            <div>
+              <h3 className="text-3xl font-black uppercase tracking-tighter mb-2 text-[#f5f5f5]">Analyses Flux</h3>
+              <p className="text-[#888] font-bold text-sm leading-relaxed">
+                Suivez vos revenus et dépenses en temps réel avec des graphiques clairs et percutants.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] flex flex-col justify-between min-h-[300px] hover:border-[#666] transition-colors group">
+            <Target className="w-12 h-12 text-[#666] group-hover:text-[#f5f5f5] transition-colors mb-8" />
+            <div>
+              <h3 className="text-3xl font-black uppercase tracking-tighter mb-2 text-[#f5f5f5]">Objectifs</h3>
+              <p className="text-[#888] font-bold text-sm leading-relaxed">
+                Fixez et atterrissez vos cibles d'épargne. Une barre de progression vous montre exactement où vous en êtes.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#f5f5f5] p-10 rounded-[2rem] text-black border border-[#ccc] flex flex-col justify-between min-h-[300px] lg:col-span-1 md:col-span-2 group">
+            <Bell className="w-12 h-12 text-[#888] group-hover:text-black transition-colors mb-8" />
+            <div>
+              <h3 className="text-3xl font-black uppercase tracking-tighter mb-2">Alertes Smart</h3>
+              <p className="font-bold text-sm text-[#333] leading-relaxed mb-6">
+                Le système vous notifie automatiquement lors de transactions importantes ou pour le rappel de vos factures critiques.
+              </p>
+              <Link href="/register" className="inline-flex items-center text-[10px] font-black uppercase tracking-widest gap-2 bg-black text-[#f5f5f5] px-4 py-2 rounded-full">
+                S'inscrire <ChevronRight className="w-3 h-3" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-[#111] p-10 rounded-[2rem] border border-[#333] min-h-[300px] md:col-span-2 lg:col-span-2 relative overflow-hidden group">
+            <Globe className="w-[400px] h-[400px] absolute -right-20 -top-20 text-[#222] group-hover:rotate-12 group-hover:scale-110 transition-transform duration-1000 opacity-50 pointer-events-none" />
+            <div className="relative z-10 flex flex-col justify-between h-full">
+              <Users className="w-12 h-12 text-[#666] group-hover:text-[#f5f5f5] transition-colors mb-8" />
+              <div className="max-w-md">
+                <h3 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[#f5f5f5]">Gestion de Contacts</h3>
+                <p className="text-[#888] font-bold text-sm leading-relaxed">
+                  Ajoutez vos bénéficiaires fréquents pour accélérer vos virements et enregistrer les historiques instantanément.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] min-h-[300px] flex flex-col justify-center items-center text-center group hover:bg-[#222] transition-colors cursor-pointer" onClick={() => window.location.href='/register'}>
+            <div className="w-20 h-20 bg-[#f5f5f5] rounded-full flex items-center justify-center text-black mb-6 group-hover:scale-110 transition-transform">
+              <ArrowRight className="w-8 h-8 -rotate-45" />
+            </div>
+            <h3 className="text-2xl font-black uppercase tracking-tighter text-[#f5f5f5]">Découvrir l'App</h3>
+            <span className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] mt-2 group-hover:text-[#f5f5f5] transition-colors">Créer un profil</span>
+          </div>
+
+        </section>
+
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-[#333] bg-[#0a0a0a] py-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center space-x-3 opacity-50">
+            <div className="w-6 h-6 bg-[#f5f5f5] rounded text-black font-black text-xs flex items-center justify-center">F.</div>
+            <span className="text-sm font-black tracking-tighter uppercase">FNCLY.</span>
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#666]">
+            © {new Date().getFullYear()} FNCLY SYSTEM. Tous droits réservés.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

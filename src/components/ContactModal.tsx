@@ -40,8 +40,8 @@ export default function ContactModal({ isOpen, onClose, onSuccess }: ContactModa
             <div className="bg-[#1a1a1a] text-[#f5f5f5] w-full max-w-sm rounded-[2rem] border border-[#333] overflow-hidden animate-in zoom-in-95 duration-300">
                 <header className="p-8 border-b border-[#333] flex justify-between items-center bg-[#111]">
                     <div>
-                        <h2 className="text-2xl font-black uppercase tracking-tighter">New Contact</h2>
-                        <p className="text-[#888] text-xs font-bold tracking-widest mt-1 uppercase">Add a payee</p>
+                        <h2 className="text-2xl font-black uppercase tracking-tighter">Nouveau Contact</h2>
+                        <p className="text-[#888] text-xs font-bold tracking-widest mt-1 uppercase">Ajouter un bénéficiaire</p>
                     </div>
                     <button onClick={onClose} className="p-3 hover:bg-[#222] rounded-full transition-all">
                         <X className="w-5 h-5 text-[#888] hover:text-[#f5f5f5]" />
@@ -50,7 +50,7 @@ export default function ContactModal({ isOpen, onClose, onSuccess }: ContactModa
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Contact Name</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Nom du Contact</label>
                         <input
                             type="text"
                             required
@@ -69,7 +69,7 @@ export default function ContactModal({ isOpen, onClose, onSuccess }: ContactModa
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Initials (Icon)</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Initiales (Icône)</label>
                         <input
                             type="text"
                             required
@@ -86,7 +86,7 @@ export default function ContactModal({ isOpen, onClose, onSuccess }: ContactModa
                         disabled={loading}
                         className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                     >
-                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Save"}
+                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Enregistrer"}
                     </button>
                 </form>
             </div>

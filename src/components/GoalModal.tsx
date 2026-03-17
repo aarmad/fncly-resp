@@ -51,8 +51,8 @@ export default function GoalModal({ isOpen, onClose, onSuccess }: GoalModalProps
             <div className="bg-[#1a1a1a] text-[#f5f5f5] w-full max-w-lg rounded-[2rem] border border-[#333] overflow-hidden animate-in zoom-in-95 duration-300">
                 <header className="p-8 border-b border-[#333] flex justify-between items-center bg-[#111]">
                     <div>
-                        <h2 className="text-2xl font-black uppercase tracking-tighter">New Project</h2>
-                        <p className="text-[#888] text-xs font-bold tracking-widest mt-1 uppercase">Define a savings goal</p>
+                        <h2 className="text-2xl font-black uppercase tracking-tighter">Nouveau Projet</h2>
+                        <p className="text-[#888] text-xs font-bold tracking-widest mt-1 uppercase">Définir un objectif</p>
                     </div>
                     <button onClick={onClose} className="p-3 hover:bg-[#222] rounded-full transition-all">
                         <X className="w-5 h-5 text-[#888] hover:text-[#f5f5f5]" />
@@ -61,20 +61,20 @@ export default function GoalModal({ isOpen, onClose, onSuccess }: GoalModalProps
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Project Name</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Nom du Projet</label>
                         <input
                             type="text"
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            placeholder="e.g. New Laptop"
+                            placeholder="ex: Nouvel Ordinateur"
                             className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-sm text-[#f5f5f5] focus:border-[#666] transition-colors"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Target (€)</label>
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Cible (€)</label>
                             <input
                                 type="number"
                                 step="0.01"
@@ -86,7 +86,7 @@ export default function GoalModal({ isOpen, onClose, onSuccess }: GoalModalProps
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Current (€)</label>
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Actuel (€)</label>
                             <input
                                 type="number"
                                 step="0.01"
@@ -100,7 +100,7 @@ export default function GoalModal({ isOpen, onClose, onSuccess }: GoalModalProps
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Target Deadline</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Date limite cible</label>
                         <input
                             type="date"
                             value={formData.deadline}
@@ -114,7 +114,7 @@ export default function GoalModal({ isOpen, onClose, onSuccess }: GoalModalProps
                         disabled={loading}
                         className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                     >
-                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Save Project"}
+                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Enregistrer"}
                     </button>
                 </form>
             </div>

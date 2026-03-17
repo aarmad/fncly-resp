@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { fr } from "date-fns/locale";
 
 export default function TransactionsPage() {
     const { data: session, status } = useSession();
@@ -62,9 +62,9 @@ export default function TransactionsPage() {
             <main className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full">
                 <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 uppercase">
                     <div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">RECORDS</h1>
+                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white">OPÉRATIONS</h1>
                         <p className="text-[#888] font-bold mt-2 tracking-widest text-xs flex gap-4 uppercase">
-                            <span>Detailed Transaction Ledger</span>
+                            <span>Registre Détaillé</span>
                         </p>
                     </div>
                     <button
@@ -72,22 +72,22 @@ export default function TransactionsPage() {
                         className="bg-[#222] hover:bg-[#333] text-[#f5f5f5] px-6 py-3 rounded-full transition-all font-bold tracking-widest text-xs flex items-center gap-2 uppercase"
                     >
                         <Plus className="w-4 h-4" />
-                        New Entry
+                        Nouv. Entrée
                     </button>
                 </header>
 
                 {/* Quick Stats */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                     <div className="bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333] min-h-[160px] flex flex-col justify-between">
-                        <p className="text-[#888] font-black uppercase text-[10px] tracking-widest mb-1">Total Income</p>
+                        <p className="text-[#888] font-black uppercase text-[10px] tracking-widest mb-1">Total Revenus</p>
                         <p className="text-3xl font-black text-[#f5f5f5]">{formatCurrency(stats.income)}</p>
                     </div>
                     <div className="bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#333] min-h-[160px] flex flex-col justify-between">
-                        <p className="text-[#888] font-black uppercase text-[10px] tracking-widest mb-1">Total Expenses</p>
+                        <p className="text-[#888] font-black uppercase text-[10px] tracking-widest mb-1">Total Dépenses</p>
                         <p className="text-3xl font-black text-[#f5f5f5]">{formatCurrency(stats.expense)}</p>
                     </div>
                     <div className="bg-[#f5f5f5] text-black p-8 rounded-[2rem] min-h-[160px] flex flex-col justify-between">
-                        <p className="font-black uppercase text-[10px] tracking-widest opacity-50 mb-1">Net Balance</p>
+                        <p className="font-black uppercase text-[10px] tracking-widest opacity-50 mb-1">Solde Net</p>
                         <p className="text-3xl font-black">{formatCurrency(stats.balance)}</p>
                     </div>
                 </section>
@@ -102,13 +102,13 @@ export default function TransactionsPage() {
                                 value={filters.type}
                                 onChange={(e) => setFilters({ ...filters, type: e.target.value })}
                             >
-                                <option value="">All Types</option>
-                                <option value="income">Income</option>
-                                <option value="expense">Expense</option>
+                                <option value="">Tous les Types</option>
+                                <option value="income">Revenus</option>
+                                <option value="expense">Dépenses</option>
                             </select>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Start Date</label>
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Date de Début</label>
                             <input
                                 type="date"
                                 className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-xs text-[#f5f5f5] uppercase transition-colors"
@@ -117,7 +117,7 @@ export default function TransactionsPage() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">End Date</label>
+                            <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Date de Fin</label>
                             <input
                                 type="date"
                                 className="w-full bg-[#111] border border-[#333] p-4 rounded-2xl outline-none font-bold text-xs text-[#f5f5f5] uppercase transition-colors"
@@ -130,7 +130,7 @@ export default function TransactionsPage() {
                                 onClick={() => setFilters({ start_date: "", end_date: "", type: "", category_id: "" })}
                                 className="w-full p-4 hover:bg-[#222] text-[#888] hover:text-[#f5f5f5] font-black text-xs uppercase tracking-widest rounded-2xl transition-colors border border-transparent hover:border-[#333]"
                             >
-                                Reset Filters
+                                Réinitialiser Filtres
                             </button>
                         </div>
                     </div>
@@ -142,9 +142,9 @@ export default function TransactionsPage() {
                         <thead className="bg-[#111] border-b border-[#333]">
                             <tr>
                                 <th className="px-8 py-6 text-left text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Date</th>
-                                <th className="px-8 py-6 text-left text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Category</th>
+                                <th className="px-8 py-6 text-left text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Catégorie</th>
                                 <th className="px-8 py-6 text-left text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Note</th>
-                                <th className="px-8 py-6 text-right text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Amount</th>
+                                <th className="px-8 py-6 text-right text-[10px] font-black text-[#888] uppercase tracking-[0.2em]">Montant</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[#333]">
@@ -153,12 +153,12 @@ export default function TransactionsPage() {
                                     <tr key={t._id} className="hover:bg-[#222] transition-colors group">
                                         <td className="px-8 py-6">
                                             <p className="font-bold text-sm tracking-widest text-[#f5f5f5] uppercase">
-                                                {format(new Date(t.date), 'dd MMM yyyy', { locale: enUS })}
+                                                {format(new Date(t.date), 'dd MMM yyyy', { locale: fr })}
                                             </p>
                                         </td>
                                         <td className="px-8 py-6">
                                             <span className="px-3 py-1 bg-[#111] border border-[#333] text-[#888] rounded-full text-[10px] font-black uppercase tracking-widest">
-                                                {t.categoryId?.name || 'Unknown'}
+                                                {t.categoryId?.name || 'Inconnu'}
                                             </span>
                                         </td>
                                         <td className="px-8 py-6">
@@ -172,12 +172,12 @@ export default function TransactionsPage() {
                                     </tr>
                                 ))
                             ) : (
-                                <tr>
-                                    <td colSpan={4} className="px-8 py-20 text-center text-[#666] font-bold text-sm uppercase tracking-widest">
-                                        No records found for this period.
-                                    </td>
-                                </tr>
-                            )}
+                                                <tr>
+                                                    <td colSpan={4} className="px-8 py-20 text-center text-[#666] font-bold text-sm uppercase tracking-widest">
+                                                        Aucune opération trouvée.
+                                                    </td>
+                                                </tr>
+                                            )}
                         </tbody>
                     </table>
                 </div>

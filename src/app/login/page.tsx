@@ -26,12 +26,12 @@ export default function LoginPage() {
             });
 
             if (res?.error) {
-                setError("Invalid credentials.");
+                setError("Identifiants incorrects.");
                 setLoading(false);
                 return;
             }
 
-            router.replace("/");
+            router.replace("/dashboard");
         } catch (error) {
             console.log(error);
             setLoading(false);
@@ -43,8 +43,8 @@ export default function LoginPage() {
             <div className="w-full max-w-lg bg-[#1a1a1a] p-10 rounded-[2rem] border border-[#333] animate-in fade-in zoom-in duration-500">
                 <div className="text-center mb-10">
                     <div className="w-16 h-16 bg-[#f5f5f5] rounded-2xl mx-auto flex items-center justify-center text-black font-black text-3xl mb-6">F.</div>
-                    <h2 className="text-4xl font-black uppercase tracking-tighter text-[#f5f5f5]">System Login</h2>
-                    <p className="text-[#888] font-bold text-xs uppercase tracking-widest mt-2">Identify to proceed</p>
+                    <h2 className="text-4xl font-black uppercase tracking-tighter text-[#f5f5f5]">Connexion</h2>
+                    <p className="text-[#888] font-bold text-xs uppercase tracking-widest mt-2">Identifiez-vous</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -55,7 +55,7 @@ export default function LoginPage() {
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Email Address</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Adresse Email</label>
                         <input
                             type="email"
                             placeholder="USER@FNCLY.NET"
@@ -66,7 +66,7 @@ export default function LoginPage() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Passcode</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Mot de passe</label>
                         <input
                             type="password"
                             placeholder="••••••••"
@@ -81,14 +81,14 @@ export default function LoginPage() {
                         disabled={loading}
                         className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                     >
-                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Authenticate"}
+                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "S'Authentifier"}
                     </button>
                 </form>
 
                 <p className="text-center mt-10 text-[#666] text-xs font-black uppercase tracking-widest">
-                    No clearance?{" "}
+                    Pas d'accès ?{" "}
                     <Link href="/register" className="text-[#f5f5f5] hover:underline underline-offset-4 decoration-2">
-                        Request Access
+                        S'inscrire
                     </Link>
                 </p>
             </div>
