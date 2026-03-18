@@ -165,7 +165,7 @@ export default function Dashboard() {
                 {/* Savings Projects */}
                 <div className="bg-[#1a1a1a] p-6 rounded-[2rem] border border-[#333]">
                     <div className="flex justify-between items-center mb-6">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888]">Projets d'Épargne</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888]">Projets d&apos;Épargne</span>
                         <button onClick={() => setIsGoalModalOpen(true)} className="text-[10px] font-black uppercase tracking-widest text-[#f5f5f5] bg-[#222] hover:bg-[#333] px-3 py-1 rounded-full transition-colors">Ajouter</button>
                     </div>
                     <div className="space-y-4 max-h-[160px] overflow-y-auto scrollbar-hide">

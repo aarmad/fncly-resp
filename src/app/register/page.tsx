@@ -30,7 +30,7 @@ export default function RegisterPage() {
                 router.replace("/login");
             }
         } catch (error: any) {
-            setError(error.response?.data?.message || "Une erreur est survenue lors de l'inscription.");
+            setError(error.response?.data?.message || "Une erreur est survenue lors de l&apos;inscription.");
             setLoading(false);
         }
     };
@@ -41,7 +41,7 @@ export default function RegisterPage() {
                 <div className="text-center mb-10">
                     <div className="w-16 h-16 bg-[#f5f5f5] rounded-2xl mx-auto flex items-center justify-center text-black font-black text-3xl mb-6">F.</div>
                     <h2 className="text-4xl font-black uppercase tracking-tighter text-[#f5f5f5]">Accès Système</h2>
-                    <p className="text-[#888] font-bold text-xs uppercase tracking-widest mt-2">Demande d'autorisation</p>
+                    <p className="text-[#888] font-bold text-xs uppercase tracking-widest mt-2">Demande d&apos;autorisation</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -52,7 +52,7 @@ export default function RegisterPage() {
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Nom de l'opérateur</label>
+                        <label className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] ml-2">Nom de l&apos;opérateur</label>
                         <input
                             type="text"
                             placeholder="JOHN DOE"
@@ -89,7 +89,7 @@ export default function RegisterPage() {
                         disabled={loading}
                         className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                     >
-                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Demander l'accès"}
+                        {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Demander l&apos;accès"}
                     </button>
                 </form>
 

@@ -86,9 +86,9 @@ export default function LoginPage() {
                 </form>
 
                 <p className="text-center mt-10 text-[#666] text-xs font-black uppercase tracking-widest">
-                    Pas d'accès ?{" "}
+                    Pas d&apos;accès ?{" "}
                     <Link href="/register" className="text-[#f5f5f5] hover:underline underline-offset-4 decoration-2">
-                        S'inscrire
+                        S&apos;inscrire
                     </Link>
                 </p>
             </div>

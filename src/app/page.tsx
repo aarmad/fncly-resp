@@ -18,7 +18,7 @@ export default function LandingPage() {
             Se Connecter
           </Link>
           <Link href="/register" className="bg-[#f5f5f5] text-black px-6 py-3 rounded-full font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-[#ccc] transition-colors">
-            S'inscrire
+            S&apos;inscrire
           </Link>
         </div>
       </nav>
@@ -79,7 +79,7 @@ export default function LandingPage() {
                 Le système vous notifie automatiquement lors de transactions importantes ou pour le rappel de vos factures critiques.
               </p>
               <Link href="/register" className="inline-flex items-center text-[10px] font-black uppercase tracking-widest gap-2 bg-black text-[#f5f5f5] px-4 py-2 rounded-full">
-                S'inscrire <ChevronRight className="w-3 h-3" />
+                S&apos;inscrire <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function LandingPage() {
             <div className="w-20 h-20 bg-[#f5f5f5] rounded-full flex items-center justify-center text-black mb-6 group-hover:scale-110 transition-transform">
               <ArrowRight className="w-8 h-8 -rotate-45" />
             </div>
-            <h3 className="text-2xl font-black uppercase tracking-tighter text-[#f5f5f5]">Découvrir l'App</h3>
+            <h3 className="text-2xl font-black uppercase tracking-tighter text-[#f5f5f5]">Découvrir l&apos;App</h3>
             <span className="text-[10px] font-black text-[#888] uppercase tracking-[0.2em] mt-2 group-hover:text-[#f5f5f5] transition-colors">Créer un profil</span>
           </div>
 

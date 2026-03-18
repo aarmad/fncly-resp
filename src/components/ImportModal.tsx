@@ -48,7 +48,7 @@ export default function ImportModal({ isOpen, onClose, onSuccess }: ImportModalP
                     setFile(null);
                 }, 2000);
             } catch (err: any) {
-                setError(err.response?.data?.message || "Erreur lors de l'importation");
+                setError(err.response?.data?.message || "Erreur lors de l&apos;importation");
             } finally {
                 setLoading(false);
             }
@@ -123,7 +123,7 @@ export default function ImportModal({ isOpen, onClose, onSuccess }: ImportModalP
                                 disabled={loading || !file}
                                 className="w-full bg-[#f5f5f5] text-black hover:bg-[#ccc] disabled:opacity-50 py-5 rounded-[2rem] font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest"
                             >
-                                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Lancer l'Importation"}
+                                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Lancer l&apos;Importation"}
                             </button>
                         </form>
                     )}

@@ -71,7 +71,7 @@ export default function GoalActionModal({ isOpen, onClose, onSuccess, goal }: Go
                                     <div className="p-3 bg-[#f5f5f5] rounded-full text-black"><PlusCircle className="w-4 h-4" /></div>
                                     <div className="text-left">
                                         <p className="text-xs font-black uppercase tracking-widest text-[#f5f5f5]">Contribuer</p>
-                                        <p className="text-[10px] font-bold text-[#666] uppercase mt-1">Ajouter de l'argent</p>
+                                        <p className="text-[10px] font-bold text-[#666] uppercase mt-1">Ajouter de l&apos;argent</p>
                                     </div>
                                 </div>
                             </button>
@@ -82,7 +82,7 @@ export default function GoalActionModal({ isOpen, onClose, onSuccess, goal }: Go
                                 <div className="flex items-center gap-4 text-rose-500 opacity-60 group-hover:opacity-100 transition-opacity">
                                     <div className="p-3 bg-rose-500/10 rounded-full"><Trash2 className="w-4 h-4" /></div>
                                     <div className="text-left">
-                                        <p className="text-xs font-black uppercase tracking-widest">Retirer l'objectif</p>
+                                        <p className="text-xs font-black uppercase tracking-widest">Retirer l&apos;objectif</p>
                                         <p className="text-[10px] font-bold opacity-60 uppercase mt-1">Supprimer définitivement</p>
                                     </div>
                                 </div>
