@@ -5,6 +5,8 @@ import Sidebar from "@/components/Sidebar";
 import TransactionModal from "@/components/TransactionModal";
 import GoalModal from "@/components/GoalModal";
 import ContactModal from "@/components/ContactModal";
+import ImportModal from "@/components/ImportModal";
+import GoalActionModal from "@/components/GoalActionModal";
 import Loader from "@/components/Loader";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -19,7 +21,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { ChartTooltip } from "@/components/ChartTooltip";
-import { Bell, ArrowUpRight, TrendingUp, Globe, Plus, ChevronRight } from "lucide-react";
+import { Bell, ArrowUpRight, ArrowDownRight, Plus, ChevronRight, Globe, FileUp, TrendingUp } from "lucide-react";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -29,6 +31,9 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isGoalActionModalOpen, setIsGoalActionModalOpen] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState<any>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -74,12 +79,22 @@ export default function Dashboard() {
               <span>[ {session?.user?.name || "User"} ]</span>
             </p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="bg-[#222] hover:bg-[#333] text-[#f5f5f5] px-6 py-3 rounded-full transition-all font-bold tracking-widest text-[10px] md:text-xs uppercase whitespace-nowrap"
-          >
-            Nouv. Opération
-          </button>
+          <div className="flex gap-4">
+            <button 
+                onClick={() => setIsImportModalOpen(true)}
+                className="bg-[#111] hover:bg-[#222] text-[#888] hover:text-[#f5f5f5] px-6 py-3 rounded-full transition-all font-bold tracking-widest text-[10px] flex items-center gap-2 uppercase border border-[#333]"
+            >
+                <FileUp className="w-4 h-4" />
+                Importer CSV
+            </button>
+            <button 
+                onClick={() => setIsModalOpen(true)}
+                className="bg-[#f5f5f5] hover:bg-[#ccc] text-black px-6 py-3 rounded-full transition-all font-bold tracking-widest text-[10px] flex items-center gap-2 uppercase"
+            >
+                <Plus className="w-4 h-4" />
+                Nouv. Entrée
+            </button>
+          </div>
         </header>
 
         {/* Complex Bento Layout */}
@@ -157,15 +172,32 @@ export default function Dashboard() {
                         {stats.goals && stats.goals.length > 0 ? stats.goals.map((goal: any) => {
                             const percent = goal.targetAmount > 0 ? Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) : 0;
                             return (
-                                <div key={goal._id} className="bg-[#111] border border-[#333] p-4 rounded-xl flex items-center justify-between group cursor-pointer hover:border-[#666] transition-colors">
+                                <div 
+                                    key={goal._id} 
+                                    onClick={() => {
+                                        setSelectedGoal(goal);
+                                        setIsGoalActionModalOpen(true);
+                                    }}
+                                    className="bg-[#111] border border-[#333] p-4 rounded-xl flex items-center justify-between group cursor-pointer hover:border-[#f5f5f5] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                >
                                     <div className="w-full">
                                         <div className="flex justify-between items-center mb-2">
-                                            <span className="font-bold text-sm text-[#f5f5f5] tracking-wide">{goal.name}</span>
-                                            <span className="text-[#888] text-xs font-black">{percent}%</span>
+                                            <span className="font-bold text-sm text-[#f5f5f5] tracking-wide group-hover:text-white transition-colors">{goal.name}</span>
+                                            <span className={`text-xs font-black transition-colors ${percent >= 100 ? 'text-emerald-500' : 'text-[#888] group-hover:text-[#f5f5f5]'}`}>
+                                                {percent}%
+                                            </span>
                                         </div>
                                         <div className="w-full bg-[#222] h-1.5 rounded-full overflow-hidden">
-                                            <div className="bg-[#f5f5f5] h-full" style={{ width: `${percent}%` }}></div>
+                                            <div 
+                                                className={`h-full transition-all duration-1000 ${percent >= 100 ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]' : 'bg-[#f5f5f5]'}`} 
+                                                style={{ width: `${percent}%` }}
+                                            ></div>
                                         </div>
+                                        {percent >= 100 && (
+                                            <p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 mt-2 flex items-center gap-1">
+                                                <div className="w-1 h-1 rounded-full bg-emerald-500"></div> Objectif Atteint
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             );
@@ -297,6 +329,20 @@ export default function Dashboard() {
           isOpen={isContactModalOpen} 
           onClose={() => setIsContactModalOpen(false)} 
           onSuccess={fetchStats} 
+        />
+        <ImportModal
+          isOpen={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          onSuccess={fetchStats}
+        />
+        <GoalActionModal
+          isOpen={isGoalActionModalOpen}
+          onClose={() => {
+            setIsGoalActionModalOpen(false);
+            setSelectedGoal(null);
+          }}
+          onSuccess={fetchStats}
+          goal={selectedGoal}
         />
       </main>
     </div>
